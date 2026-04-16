@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<!-- saved from url=(0048)file:///C:/Users/asus/Desktop/my_site/index.html -->
+<html lang="zh-CN">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的第一个网页</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* 你的Flexbox代码 */
+    .container {
+      display: flex;
+      flex-direction: column;
+      /* 垂直排列 */
+      height: 100vh;
+      /* 全屏高度 */
+      width: 100%;
+      /* 全宽 */
+    }
+
+    .header,
+    .footer {
+      /* 去掉固定高度，让它根据内容自动伸展 */
+      background-color: #667466;
+      color: white;
+      padding: 20px;
+
+      /* 关键！让header内部也用flex布局 */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      /* 垂直居中对齐 */
+      gap: 20px;
+      /* 图片和文字之间的间距 */
+      flex-wrap: wrap;
+      /* 如果屏幕太小，自动换行 */
+    }
+
+    .main {
+      flex-grow: 1;
+      /* 吃掉剩余所有空间 */
+      background-color: #383434;
+      color: white;
+      /* 加个背景色方便看效果 */
+      padding: 20px;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="./images/妹和波球.jpeg" alt="头像" width="80px">
+      <h3>小周同学的博客</h3>
+      <!--<br>单个出现 换行-->
+      <p>这是我的个人博客，记录学习与生活。</p>
+      <p>一直听着别人的话，不断改变自己规划好的路径太头疼了
+        <br>
+        还是坚定一个目标一直走下去吧，从此面对除了是高人之外的指点都不为所动
+        <br>
+        专注一个事，总会有成果的！
+        <br><strong>完蛋完蛋完蛋 这下真的坏了 线代再不好好去学习 会挂科的 确信！</strong>
+      </p>
+    </div>
+    <div class="main">
+      <strong>
+        想其他东西去听各种舆论、太费脑子也太内耗了<br>
+        我现在就决定了：<br>
+        先搞张老师的项目<br>
+        然后计算机图形学学起来<br>
+        之后谁想跟我说什么妄想改变我的路径的我都不想听，（老师的话要听的<br>
+        网站美化的事情先放一边。</strong>
+      <br>
+      <br>
+      <br>
+      <p>
+        网页透明化清新nga式配色，有背景图。手机、电脑端布局不同
+        <br>
+        ***使用flexbox来布局：<br>
+        *左侧导引列：使用iframe不跳转地展示右部内容<br>
+        *+右侧大部分内容页（上部网页标题、下部以文章为载体，时间顺序从新到旧，进行一个个预览陈列，提供展开详细页，并在当前页面展开而不跳转）<br>
+        详见下：
+      </p>
+      <img src="./images/框架.jpg" alt="框架" width="500px">
+      <p>
+        title\sidebar\footer连为一体，呈现一体式的透明感，右侧main中的posts采用平滑展开的预览方式，<br>
+        title和main之间使用小人跳跳跳的动效<br>
+        左下角使用滑钮切换day\night<br>
+        整体风格呈现出现代的高级感+小清新，避免过于锐利<br>
+      </p>
+    </div>
+    <div class="footer">
+      <p>我的网站</p>
+      <a href="http://zly3070.github.io/">友情链接</a>
+    </div>
+  </div>
+</body>
+
+</html>
