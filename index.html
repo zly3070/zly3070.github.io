@@ -14,7 +14,11 @@
       box-sizing: border-box;
     }
 
-    /* 你的Flexbox代码 */
+    p,
+    strong {
+      line-height: 2.0;
+    }
+
     .container {
       display: flex;
       flex-direction: column;
@@ -23,6 +27,26 @@
       /* 全屏高度 */
       width: 100%;
       /* 全宽 */
+    }
+
+    .box_column {
+      display: flex;
+      /* ← 加上这个！ */
+      flex-direction: column;
+      /* 垂直排列 */
+      gap: 20px;
+      /* 子元素间距 */
+    }
+
+    .box_row {
+      display: flex;
+      /* ← 加上这个！ */
+      flex-direction: row;
+      /* 水平排列 */
+      gap: 20px;
+      /* 子元素间距 */
+      flex-wrap: wrap;
+      /* 屏幕太窄时自动换行 */
     }
 
     .header,
@@ -86,21 +110,28 @@
       <br>
       <br>
       <br>
-      <p>
-        网页透明化清新nga式配色，有背景图。手机、电脑端布局不同
-        <br>
-        ***使用flexbox来布局：<br>
-        *左侧导引列：使用iframe不跳转地展示右部内容<br>
-        *+右侧大部分内容页（上部网页标题、下部以文章为载体，时间顺序从新到旧，进行一个个预览陈列，提供展开详细页，并在当前页面展开而不跳转）<br>
-        详见下：
-      </p>
-      <img src="./images/框架.jpg" alt="框架" width="500px">
-      <p>
-        title\sidebar\footer连为一体，呈现一体式的透明感，右侧main中的posts采用平滑展开的预览方式，<br>
-        title和main之间使用小人跳跳跳的动效<br>
-        左下角使用滑钮切换day\night<br>
-        整体风格呈现出现代的高级感+小清新，避免过于锐利<br>
-      </p>
+      <div class="box_row" style="align-items: flex-start;">
+        <!-- 左侧：图片 -->
+        <img src="./images/框架.jpg" alt="框架" style="width: 300px; flex-shrink: 0;">
+
+        <!-- 右侧：两段文字（竖排列） -->
+        <div class="box_column" style="flex: 1;">
+          <p style="line-height: 1.8;">
+            网页透明化清新nga式配色，有背景图。手机、电脑端布局不同<br>
+            ***使用flexbox来布局：<br>
+            *左侧导引列：使用iframe不跳转地展示右部内容<br>
+            *+右侧大部分内容页（上部网页标题、下部以文章为载体，时间顺序从新到旧，进行一个个预览陈列，提供展开详细页，并在当前页面展开而不跳转）<br>
+            详见下：
+          </p>
+          <p style="line-height: 1.8;">
+            title\sidebar\footer连为一体，呈现一体式的透明感，右侧main中的posts采用平滑展开的预览方式，<br>
+            title和main之间使用小人跳跳跳的动效<br>
+            左下角使用滑钮切换day\night<br>
+            整体风格呈现出现代的高级感+小清新，避免过于锐利
+          </p>
+        </div>
+      </div>
+
     </div>
     <div class="footer">
       <p>我的网站</p>
