@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的第一个网页 - 黄金比例布局</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* 整体背景（两侧留白区域） */
+    body {
+      background-color: #2a2a2a;
+      /* 深色背景衬托 */
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      /* 可选：背景图 */
+      background-image: url('./images/wall3.jpg');
+      background-repeat: repeat;
+    }
+
+    /* 黄金比例容器 */
+    .golden-container {
+      /* 高度默认100vh，宽度动态计算 */
+      height: 100vh;
+      /* 宽度 = 高度 × 0.618 */
+      width: calc(100vh * 0.618);
+      
+      /* 最大最小限制，防止太窄或太宽 */
+      max-width: 95vw;
+      min-width: 320px;
+      
+      /* 圆角 */
+      border-radius: 24px;
+      overflow: hidden;
+      
+      /* 阴影增加立体感 */
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    /* 你的原有样式 */
+    .container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      width: 100%;
+    }
+
+    p,
+    strong {
+      line-height: 1.5;
+    }
+
+    .box_column {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .box_row {
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .header,
+    .footer {
+      background-color: #667466;
+      color: white;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .main {
+      flex-grow: 1;
+      background-color: #383434;
+      color: white;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 黄金比例主容器 -->
+  <div class="golden-container">
+    <div class="container">
+      <div class="header">
+        <img src="./images/妹和波球.jpeg" alt="头像" width="80px">
+        <h3>小周同学的博客</h3>
+        <p>这是我的个人博客，记录学习与生活。</p>
+        <p>一直听着别人的话，不断改变自己规划好的路径太头疼了
+          <br>
+          还是坚定一个目标一直走下去吧，从此面对除了是高人之外的指点都不为所动
+          <br>
+          专注一个事，总会有成果的！
+          <br><strong>完蛋完蛋完蛋 这下真的坏了 线代再不好好去学习 会挂科的 确信！</strong>
+        </p>
+      </div>
+      <div class="main">
+        <strong>
+          想其他东西去听各种舆论、太费脑子也太内耗了<br>
+          我现在就决定了：<br>
+          先搞张老师的项目<br>
+          然后计算机图形学学起来<br>
+          之后谁想跟我说什么妄想改变我的路径的我都不想听，（老师的话要听的<br>
+          网站美化的事情先放一边。
+        </strong>
+        <br><br><br>
+        <div class="box_row" style="align-items: flex-start;">
+          <img src="./images/框架.jpg" alt="框架" style="width: 300px; flex-shrink: 0;">
+          <div class="box_column" style="flex: 1;">
+            <p>
+              网页透明化清新nga式配色，有背景图。手机、电脑端布局不同<br>
+              ***使用flexbox来布局：<br>
+              *左侧导引列：使用iframe不跳转地展示右部内容<br>
+              *+右侧大部分内容页（上部网页标题、下部以文章为载体，时间顺序从新到旧，进行一个个预览陈列，提供展开详细页，并在当前页面展开而不跳转）<br>
+              详见下：
+            </p>
+            <p>
+              title\sidebar\footer连为一体，呈现一体式的透明感，右侧main中的posts采用平滑展开的预览方式，<br>
+              title和main之间使用小人跳跳跳的动效<br>
+              左下角使用滑钮切换day\night<br>
+              整体风格呈现出现代的高级感+小清新，避免过于锐利
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="footer">
+        <p>我的网站</p>
+        <a href="http://zly3070.github.io/">友情链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 两侧装饰元素（可选） -->
+  <!-- 左侧装饰 -->
+  <div class="deco-left">
+    🌟
+  </div>
+  <!-- 右侧装饰 -->
+  <div class="deco-right">
+    ✨
+  </div>
+</body>
+
+</html>
