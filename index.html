@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      height: 100vh;
+      background-color: white;
+    }
+
+    #main {
+      height: 100%;
+      width: 100%;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 0.3125fr 0.4fr 1fr 1fr 0.3125fr;
+      grid-template-rows: auto 1fr auto;
+      grid-template-areas:
+        'header header header header header'
+        '. sidebar content content .'
+        'footer footer footer footer footer';
+      gap: 10px;
+      background-color: transparent;
+    }
+
+    #main>* {
+      border: solid 1px #aAaAaE;
+    }
+
+    .header {
+      grid-area: header;
+      background-color: white;
+      display: flex;
+    }
+
+    .sidebar {
+      grid-area: sidebar;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .content {
+      grid-area: content;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      row-gap: 20px;
+      background-color: white;
+      padding: 20px 10px 20px 20px;
+    }
+
+    .card {
+      width: 100%;
+      margin: auto;
+      font-size: 13px;
+      border: solid 1px #aAaAaE;
+      color: #414142;
+      background-color: #fafaf5;
+      padding: 8px 12px;
+      line-height: 17px;
+    }
+
+    .footer {
+      grid-area: footer;
+      display: flex;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="main">
+    <div class="header">
+      <h1 class="flex" style="align-self: center; margin-left: 20px;">HEADER</h1>
+      <img class="flex" src="images/header_hello_cut.png" alt="header-hello" style="height: 100px; margin-left: auto;">
+    </div>
+    <div class="sidebar" style="border:0;">
+      <img class="flex" src="images/menu.gif" alt="menu"
+        style="height: 30px;width: 120px;  margin-top: 10px; margin-left: 0;">
+      <h1 class="flex" style="margin:auto auto auto 0;">
+        SIDEBAR</h1>
+    </div>
+    <div class="content">
+      <div class="card" , style="height: auto;">
+        <h3>小周同学的博客</h3>
+        <p>这是我的个人博客，记录学习与生活。</p>
+        <p>一直听着别人的话，不断改变自己规划好的路径太头疼了
+          <br>
+          还是坚定一个目标一直走下去吧，从此面对除了是高人之外的指点都不为所动
+          <br>
+          专注一个事，总会有成果的！
+
+        </p>
+      </div>
+
+      <div class="card">
+        <strong>完蛋完蛋完蛋 这下真的坏了 线代再不好好去学习 会挂科的 确信！</strong>
+      </div>
+      <div class="card" , style="height: auto;">
+        <strong>
+          想其他东西去听各种舆论、太费脑子也太内耗了<br>
+          我现在就决定了：<br>
+          先搞张老师的项目<br>
+          然后计算机图形学学起来<br>
+          之后谁想跟我说什么妄想改变我的路径的我都不想听，（老师的话要听的<br>
+          网站美化的事情先放一边。
+        </strong>
+      </div>
+      <div class="card" style="height :auto; display:flex; flex-direction:'row'; gap:'20px'">
+        <img src="./images/框架.jpg" alt="框架" style="width: 300px; flex-shrink: 0;">
+        <div style="display:flex;flex-direction:column;">
+          <p style="flex-wrap: wrap;">
+            网页透明化清新nga式配色，有背景图。手机、电脑端布局不同<br>
+            ***使用flexbox来布局：<br>
+            *左侧导引列：使用iframe不跳转地展示右部内容<br>
+            *+右侧大部分内容页（上部网页标题、下部以文章为载体，时间顺序从新到旧，进行一个个预览陈列，提供展开详细页，并在当前页面展开而不跳转）<br>
+            详见下：
+          </p> <br>
+          <p>
+            title\sidebar\footer连为一体，呈现一体式的透明感，右侧main中的posts采用平滑展开的预览方式，<br>
+            title和main之间使用小人跳跳跳的动效<br>
+            左下角使用滑钮切换day\night<br>
+            整体风格呈现出现代的高级感+小清新，避免过于锐利
+          </p>
+        </div>
+
+      </div>
+      <div class="card">
+        <p>
+          希望sidebar和content也能扩展至两遍，可以留出更多空隙<br>
+          content内容由sidebar的inframe引导<br>
+          每分区由顶图由分区主题变换而变换<br>
+          header和footer的图用那两张，都放在右侧，左侧放重要文字
+        </p>
+      </div>
+    </div>
+    <div class="footer">
+      <img class="flex" src="images/footer.png" alt="footer" style="height: 100px; margin-right: auto;">
+      <h1 class="flex" style="align-self: center; margin-right: 20px;margin-left: auto;">
+        FOOTER</h1>
+      </h1>
+    </div>
+  </div>
+</body>
+
+</html>
