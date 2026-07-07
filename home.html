@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home - Lyon Dev</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      /* home.html 自己覆盖 body 的布局 */
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #main {
+        display: flex;
+        flex-direction: column;
+        padding: 50px 150px;
+        flex: 1;
+      }
+
+      footer {
+        padding: 23px 150px;
+        flex-shrink: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <main id="main">
+      <div
+        style="display: flex; align-items: center; gap: 8px; margin-top: -25px"
+      >
+        <span style="color: #898e96">
+          欢迎来到zly3070的小站，今后会在这里分享我的折腾经历。<br />
+          我使用了纯html和css搭建了这个网页，您可以在浏览器里按F12打开开发者工具，查看网页的源代码，或者在github上查看我的代码仓库，欢迎交流和指正。
+          <br />
+          <br />
+          <span style="font-weight: 600">关于友链：</span
+          >建站伊始，评论功能尚未完善，您可以通过Issues给我发送您的个人网站网址和希望呈现的名字。<br />
+          格式参照 &lt;a href="bulabula.com"&gt;bulabula&lt;/a&gt;
+        </span>
+      </div>
+
+      <hr style="margin-top: 20px" />
+      <div>
+        <div style="margin-top: 35px">
+          <h1 style="font-weight: 800">
+            Recent <a href="" id="" class="post-link">./</a>
+          </h1>
+
+          <div
+            style="
+              display: flex;
+              flex-direction: column;
+              gap: 16px;
+              margin-top: 16px;
+            "
+          >
+            <div>
+              <span
+                style="font-family: Consolas; font-size: 14px; color: #666666"
+                >before 07 Jul 2026 </span
+              ><a
+                href="somePosts/2026-05-12-翻墙心得.html"
+                style="font-size: 18px"
+                class="post-link"
+                target="main-frame"
+                >翻墙心得</a
+              >
+            </div>
+            ...<br />
+            ...<br />
+            ...<br />
+            ...<br />
+            ...<br />
+            ...<br />
+            ...<br />
+            ...<br />
+            ...<br />
+          </div>
+        </div>
+
+        <div style="margin-top: 50px">
+          <h1 style="font-weight: 800">
+            Portfolio <a href="" class="post-link">./</a>
+          </h1>
+          <div
+            style="
+              display: flex;
+              flex-direction: column;
+              gap: 16px;
+              margin-top: 16px;
+            "
+          >
+            <div>
+              <span
+                style="font-family: Consolas; font-size: 14px; color: #666666"
+                >02 Jul 2026 </span
+              ><a
+                href="https://github.com/zly3070/cpp_homeworks/tree/main/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E8%AF%BE%E5%A4%A7%E4%BD%9C%E4%B8%9A/AlumniSystem"
+                target="_blank"
+                style="font-size: 18px"
+                class="post-link"
+                >校友录系统</a
+              >
+            </div>
+
+            ...<br />
+            ...<br />
+            ...<br />
+            ...<br />
+            ...<br />
+            ...<br />
+            ...<br />
+            ...<br />
+            ...<br />
+            ...<br />
+          </div>
+        </div>
+      </div>
+    </main>
+    <hr style="width: calc(100% - 300px); margin: auto" />
+    <footer>
+      <div style="display: flex; flex-direction: column">
+        <div style="display: flex">
+          <div
+            style="display: flex; align-self: flex-start; gap: 70px; flex: 1"
+          >
+            <div style="display: flex; flex-direction: column">
+              <p style="font-size: 20px; margin-bottom: 16px; font-weight: 800">
+                friends
+              </p>
+              <p>TZblog</p>
+              <p>homo</p>
+              <p>Q</p>
+              <p>NaOh</p>
+            </div>
+            <div style="display: flex; flex-direction: column">
+              <p style="margin-bottom: 16px; font-size: 20px; font-weight: 800">
+                something to say?
+              </p>
+              <p style="color: #acb02b">Coming soon</p>
+            </div>
+          </div>
+
+          <div style="margin-left: auto">
+            <img
+              src="images/footer.webp"
+              alt="footer-links"
+              style="
+                width: 300px;
+                margin-left: auto;
+                display: block;
+                margin-top: -7px;
+              "
+            />
+          </div>
+        </div>
+        <div style="display: flex; justify-content: center">
+          <p
+            style="
+              color: #555555;
+              margin-top: 14px;
+              margin-bottom: -7px;
+              font-family: Source Sans Pro;
+            "
+          >
+            &copy; 2026 Lyon Chow. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
