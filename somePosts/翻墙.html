@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>翻墙</title>
+    <!-- <link rel="stylesheet" href="../style.css" /> -->
+    <style>
+      * {
+        box-sizing: border-box;
+        font-family:
+          "Roboto Condensed", "Arial", serif, "Helvetica", "Arial", sans-serif;
+        line-height: 1.5;
+        color: #333;
+        font-style: normal;
+        text-autospace: normal;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #main {
+        display: flex;
+        flex-direction: column;
+        padding: 50px 150px;
+        flex: 1;
+      }
+
+      footer {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        padding: 23px 150px;
+        flex-shrink: 0;
+      }
+
+      footer * {
+        padding: 0;
+        margin: 0;
+      }
+
+      .post-link {
+        text-decoration: none;
+      }
+
+      .post-link:hover {
+        color: #aa0707;
+      }
+    </style>
+  </head>
+  <body>
+    <main id="main">
+      <h1 style="margin: 0px">
+        <a
+          href="../home.html"
+          class="post-link"
+          target="main-frame"
+          style="text-decoration: none; margin: 0px"
+          >~/</a
+        >
+      </h1>
+      <hr width="100%" style="margin-top: 0px; margin-bottom: 40px" />
+      <h2 id="翻墙心得">翻墙心得</h2>
+      <p>用“梯子”翻墙，简单来说就是<strong>你（客户端）——
+      机场（服务商）—— 目标网站</strong>
+      这样一个链条。为了让你更容易理解，可以把这整个流程想象成<strong>点外卖</strong>：</p>
+      <ul>
+      <li><strong>“节点”</strong>
+      就像是提供外卖的<strong>各家餐厅</strong>，是连接外网的具体“通道”或“服务器”。</li>
+      <li><strong>“机场”</strong>
+      就像是<strong>外卖平台（如美团/饿了么）</strong>，负责整合所有餐厅，并提供统一的菜单（订阅链接）。</li>
+      <li><strong>Clash Verge</strong>
+      就像是<strong>外卖App</strong>，安装在你的手机/电脑上，用来点餐、管理订单。</li>
+      </ul>
+      <p>机场就是<strong>翻墙服务提供商</strong>。他们从各个地方购买和维护大量节点，然后打包成一个“订阅链接”卖给你。你只要把这个订阅链接（就像外卖平台的统一菜单）导入到客户端，就能自动获取所有节点信息，无需手动一个一个配置。</p>
+      <p><strong>Clash Verge</strong>
+      就是你电脑上安装的那个软件，它本身不提供翻墙服务，而是一个<strong>功能强大的图形化客户端</strong>，用来管理“机场”给你的节点。之前还以为clash
+      verge就是卖机场的，真是尴尬。要说简单点，其实就是一个功能强大的翻墙管理系统，帮你整理好各种路径并将数据可视化给你看。</p>
+      <p>在 Clash Verge 里，你通常会看到以下三种模式：</p>
+      <ol type="1">
+      <li><strong>规则模式 (Rule) - 最推荐、最智能</strong>
+      <ul>
+      <li><strong>工作原理</strong>：它会根据内置的一套“规则”来判断流量。比如，访问百度、淘宝等国内网站的流量“<strong>直连</strong>”；访问谷歌、YouTube等国外网站的流量“<strong>走代理</strong>”。</li>
+      <li><strong>一句话总结</strong>：<strong>智能分流</strong>，绝大多数场景下都用它，省心省力。</li>
+      </ul></li>
+      <li><strong>全局模式 (Global) - 最彻底、但可能有副作用</strong>
+      <ul>
+      <li><strong>工作原理</strong>：不管你是访问百度还是谷歌，<strong>所有</strong>网络流量都强制通过代理节点。</li>
+      <li><strong>一句话总结</strong>：访问国内网站反而会变慢，一般不作为日常模式。</li>
+      </ul></li>
+      <li><strong>直连模式 (Direct) - 最安全、但无效</strong>
+      <ul>
+      <li><strong>工作原理</strong>：所有流量都不经过代理，软件完全失效。</li>
+      <li><strong>一句话总结</strong>：相当于关闭了翻墙软件。</li>
+      </ul></li>
+      </ol>
+      <blockquote>
+      <p><strong>TUN 模式是什么？</strong></p>
+      <p>你可能会注意到 Clash Verge 里还有个“TUN
+      模式”。它和上面的系统代理模式有什么区别呢？</p>
+      <ul>
+      <li><strong>系统代理 (System
+      Proxy)</strong>：这是“应用层”的代理，只对浏览器等<strong>主动遵循系统代理设置</strong>的程序生效。很多游戏、命令行工具等不会走这个代理。</li>
+      <li><strong>TUN
+      模式</strong>：它在你的电脑上创建一个虚拟网卡，<strong>强制所有流量（不管是什么程序、什么协议）都先经过
+      Clash</strong>，然后再由 Clash
+      的规则决定是丢弃、直连还是走代理。</li>
+      <li><strong>什么时候开？</strong>
+      当你遇到某些软件（特别是游戏、命令行、UWP应用）无法翻墙时，开启
+      TUN 模式通常能解决。</li>
+      </ul>
+      </blockquote>
+      <h3 id="那么应当怎么配置梯子">那么应当怎么配置梯子？</h3>
+      <ol type="1">
+      <li><strong>下载安装</strong>：从官方GitHub仓库下载 <strong>Clash
+      Verge</strong> 最新版并安装。</li>
+      <li><strong>获取订阅</strong>：在你购买的“机场”网站上，找到“订阅链接”并复制。（这步需要好耐心，人机验证可能会卡你很久，无他，唯多刷新尔）</li>
+      <li><strong>导入订阅</strong>：打开 Clash Verge，在“订阅
+      (Profiles)”页面，点击“新建”，粘贴你的订阅链接并保存。</li>
+      <li><strong>选择节点</strong>：点击“代理
+      (Proxies)”页面，在列表中选择一个你想要的节点，或者保持“自动选择”让软件帮你挑最快的。</li>
+      <li><strong>开启代理</strong>：回到“首页 (General)”，打开“系统代理
+      (System Proxy)”开关。如果需要，也可以在此处开启“TUN 模式”。</li>
+      </ol>
+    </main>
+    <hr style="width: calc(100% - 300px); margin: auto" />
+    <footer>
+      <div style="display: flex; flex-direction: column">
+        <div style="display: flex">
+          <div
+            style="display: flex; align-self: flex-start; gap: 70px; flex: 1"
+          >
+            <div style="display: flex; flex-direction: column">
+              <p style="font-size: 20px; margin-bottom: 16px; font-weight: 800">
+                Friends
+              </p>
+              <p>TZblog</p>
+              <p>homo</p>
+              <p>Q</p>
+              <p>NaOh</p>
+            </div>
+            <div style="display: flex; flex-direction: column">
+              <p style="margin-bottom: 16px; font-size: 20px; font-weight: 800">
+                Something to comment?
+              </p>
+              <p style="color: #acb02b">Coming soon</p>
+            </div>
+          </div>
+
+          <div style="margin-left: auto">
+            <img
+              src="../images/footer.webp"
+              alt="footer-links"
+              style="
+                width: 300px;
+                margin-left: auto;
+                display: block;
+                margin-top: -7px;
+              "
+            />
+          </div>
+        </div>
+        <div style="display: flex; justify-content: center">
+          <p
+            style="
+              color: #555555;
+              margin-top: 14px;
+              margin-bottom: -7px;
+              font-family: Source Sans Pro;
+            "
+          >
+            &copy; 2026 Lyon Chow. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
