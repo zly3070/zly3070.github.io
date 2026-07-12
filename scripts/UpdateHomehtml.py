@@ -77,7 +77,7 @@ def generate_post_item(items) -> str:
               <div>
                 <span 
                   style="font-family: Consolas; font-size: 14px; color: #666666"
-                  >{formatted_date}</span
+                  >{formatted_date} </span
                   ><a
                     href="somePosts/{filename}"
                     style="font-size: 18px"
@@ -89,8 +89,8 @@ def generate_post_item(items) -> str:
     
     html_items.append(item)
     
-    # 用换行符拼接所有项
-    return '\n'.join(html_items)
+  # 用换行符拼接所有项
+  return '\n'.join(html_items)
 
 # ========== Step4: Update Homehtml ==========
 
@@ -153,3 +153,4 @@ if __name__ == '__main__':
   update_home_html(post_items)
 
   print("完成")
+
