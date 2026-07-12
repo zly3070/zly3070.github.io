@@ -1,0 +1,67 @@
+name: Convert Markdown to HTML # 工作流的名字，显示在github actions的界面上
+
+on: # 触发条件
+  push:
+    paths:
+      - "somePosts/*.md" # 只有.md文件变化时才触发
+      - "template.html" # 模板html变化也触发
+      - "home.html" # home.html 变化也触发重新生成列表
+
+jobs:
+  convert: # 任务名字
+    runs-on: ubuntu-latest # 运行在最新版Ubuntu
+    permissions: # 任务权限
+      contents: write # 允许推送回仓库，即将生成的html推送回来
+
+    steps: # 顺序执行步骤
+      - name: Checkout repository
+        uses: actions/checkout@v4 # 使用官方checkout动作，将自己代码拉到服务器上
+
+      - name: Install Pandoc
+        run: sudo apt-get update && sudo apt-get install -y pandoc # -y自动确认
+
+      - name: Convert all .md files to .html
+        run: |
+          for file in somePosts/*.md; do
+            if [ -f "$file" ]; then
+              filename=$(basename "$file" .md)
+
+              # 提取日期（格式：2026-03-26）
+              date_part=$(echo "$filename" | grep -oP '^\d{4}-\d{2}-\d{2}')
+
+              # 提取标题（去掉日期和开头的 -）
+              title_part=$(echo "$filename" | sed 's/^[0-9\-]*\-//')
+
+              echo "Converting: $file"
+              echo "  Date: $date_part"
+              echo "  Title: $title_part"
+
+              pandoc "$file" \
+                --template=template.html \
+                --metadata title="${title_part}" \
+                -o "somePosts/${filename}.html"
+
+              # 保存住日期、title、文件名信息，便于python脚本读取
+              echo "${date_part}|${title_part}|${filename}.html" >> post_list.txt
+            fi
+          done
+
+      - name: Generate post list and update home.html
+        run: |
+          python scripts/UpdateHomehtml.py
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add -A
+
+          # 如果工作区没有改动并且暂存区也没有改动，就什么都不做；否则（有改动），就提交。
+          if git diff --quiet && git diff --staged --quiet; then
+            echo "没有需要提交的改动"
+          else
+            echo "有改动，正在提交..."
+            git commit -m "Auto: convert markdown to HTML and update post list"
+          fi
+
+          git push
