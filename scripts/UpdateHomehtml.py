@@ -21,7 +21,7 @@ def read_post_list() -> list:
   """
   items = [] # 存放切割后信息
 
-  with open('../post_list.txt', 'r', encoding='utf-8') as f:
+  with open('post_list.txt', 'r', encoding='utf-8') as f:
     for line in f:
       line = line.strip() #去掉首位空白
       if not line:
@@ -101,7 +101,7 @@ def update_home_html(new_post_items):
   """
    
   # 读取home.html
-  with open('../home.html', 'r', encoding='utf-8') as f:
+  with open('home.html', 'r', encoding='utf-8') as f:
     content = f.read()
 
   # 定义标记
@@ -128,7 +128,7 @@ def update_home_html(new_post_items):
   content = pattern.sub(new_block, content)
 
   # 写回 home.html
-  with open('../home.html', 'w', encoding='utf-8') as f:
+  with open('home.html', 'w', encoding='utf-8') as f:
     f.write(content)
   
   print("成功更新 home.html 的文章列表")
