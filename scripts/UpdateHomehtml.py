@@ -35,7 +35,10 @@ def read_post_list() -> list:
         filename = parts[2]
         items.append((date_str, title, filename))
 
-    return items
+  # 按日期倒序排列，最新的在最上面
+  items.sort(key=lambda x: x[0], reverse=True)
+  
+  return items
 
 # ========== Step2: Format Date ==========
 
