@@ -52,7 +52,9 @@
         color: #aa0707;
       }
 
-      blockquote {
+      /* 继承的优先级是最低的 */
+      blockquote,
+      blockquote * {
         color: #777777;
         border-left: 5px solid #efefef;
         padding-left: 20px; /* border 和文字之间的空隙 */
