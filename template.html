@@ -53,11 +53,13 @@
       }
 
       /* 继承的优先级是最低的 */
-      blockquote,
-      blockquote * {
+      blockquote {
         color: #777777;
         border-left: 5px solid #efefef;
         padding-left: 20px; /* border 和文字之间的空隙 */
+      }
+      blockquote * {
+        color: #777777;
       }
 
       code {
