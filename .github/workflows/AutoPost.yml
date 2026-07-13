@@ -6,13 +6,24 @@ on: # 触发条件
       - "somePosts/*.md" # 只有.md文件变化时才触发
       - "template.html" # 模板html变化也触发
       - "home.html" # home.html 变化也触发重新生成列表
+      - ".github/workflows/AutoPost.yml"
+      - "scripts/UpdateHomehtml.py"
+      - "style.css"
+
+# 赋予部署权限
+permissions: 
+  contents: read # 只需要读权限，不用写回仓库
+  pages: write # 允许部署到 Pages
+  id-token: write # 用于验证
+
+# 防止同时部署冲突
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
   convert: # 任务名字
     runs-on: ubuntu-latest # 运行在最新版Ubuntu
-    permissions: # 任务权限
-      contents: write # 允许推送回仓库，即将生成的html推送回来
-
     steps: # 顺序执行步骤
       - name: Checkout repository
         uses: actions/checkout@v4 # 使用官方checkout动作，将自己代码拉到服务器上
@@ -50,18 +61,23 @@ jobs:
         run: |
           python scripts/UpdateHomehtml.py
 
-      - name: Commit and push changes
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git add -A
+      - name: Upload artifact # 上传仓库至 github 的临时存储中
+        uses: actions/upload-pages-artifact@v3 
+        with:
+          path: "."
 
-          # 如果工作区没有改动并且暂存区也没有改动，就什么都不做；否则（有改动），就提交。
-          if git diff --quiet && git diff --staged --quiet; then
-            echo "没有需要提交的改动"
-          else
-            echo "有改动，正在提交..."
-            git commit -m "Auto: convert markdown to HTML and update post list"
-          fi
+  deploy:
+    needs: convert
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to Github Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 
-          git push
+
+
+
+      
