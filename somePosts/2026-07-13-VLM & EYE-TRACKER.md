@@ -2,7 +2,7 @@
 title: VLM & EYE-TRACKER
 ---
 
-# VLM 和 EYE-TRACK
+# VLM & EYE-TRACK
 
 _出于近实习的原因，开始关注这方面的东西，越深入，越觉得要理解本质才能更好地指定方向，因此本文专注于梳理和解释 **VLM** 相关知识，并且结合正在进行的工作 **EYE-TRACKER** 在其中哪个部分起到作用来展开。_
 
