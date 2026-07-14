@@ -104,7 +104,7 @@ def generate_post_item(items) -> str:
         description = extract_description(md_filename)
 
         # 有简介才生成 p 标签
-        desc_html = f'<p style="font-size: 16px; margin: 4px 0 0 0;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{description}</p>' if description else ''
+        desc_html = f'<p style="font-size: 16px;">{description}</p>' if description else ''
 
         item = f'''
           <div style="display:flex">
