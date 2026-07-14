@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+    <!-- <link rel="stylesheet" href="../style.css" /> -->
+    <style>
+      * {
+        box-sizing: border-box;
+        font-family:
+          "Roboto Condensed", "Arial", serif, "Helvetica", "Arial", sans-serif;
+        line-height: 1.5;
+        color: #333;
+        /* font-style: normal; */
+        text-autospace: normal;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #main {
+        display: flex;
+        flex-direction: column;
+        padding: 50px 150px;
+        flex: 1;
+      }
+
+      footer {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        padding: 23px 150px;
+        flex-shrink: 0;
+      }
+
+      footer * {
+        padding: 0;
+        margin: 0;
+      }
+
+      .post-link {
+        text-decoration: none;
+      }
+      .post-link:hover {
+        color: #aa0707;
+      }
+
+      /* 继承的优先级是最低的 */
+      blockquote {
+        color: #777777;
+        border-left: 5px solid #efefef;
+        padding-left: 20px; /* border 和文字之间的空隙 */
+      }
+      blockquote * {
+        color: #777777;
+      }
+
+      code {
+        background-color: #efefef;
+        padding: 2px;
+        border-radius: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <main id="main">
+      <h1 style="margin: 0px">
+        <a
+          href="../home.html"
+          class="post-link"
+          target="main-frame"
+          style="text-decoration: none; margin: 0px"
+          >~/</a
+        >
+      </h1>
+      <hr width="100%" style="margin-top: 0px; margin-bottom: 40px" />
+      <h3 id="about-me">About me</h3>
+      <hr />
+      <p>Coming soon …</p>
+    </main>
+    <hr style="width: calc(100% - 300px); margin: auto" />
+    <footer>
+      <div style="display: flex; flex-direction: column">
+        <div style="display: flex">
+          <div
+            style="display: flex; align-self: flex-start; gap: 70px; flex: 1"
+          >
+            <div style="display: flex; flex-direction: column">
+              <p style="font-size: 20px; margin-bottom: 16px; font-weight: 800">
+                Friends
+              </p>
+              <p>TZblog</p>
+              <p>homo</p>
+              <p>Q</p>
+              <p>NaOh</p>
+            </div>
+            <div style="display: flex; flex-direction: column">
+              <p style="margin-bottom: 16px; font-size: 20px; font-weight: 800">
+                Something to comment?
+              </p>
+              <p style="color: #acb02b">Coming soon</p>
+            </div>
+          </div>
+
+          <div style="margin-left: auto">
+            <img
+              src="../images/footer.webp"
+              alt="footer-links"
+              style="
+                width: 300px;
+                margin-left: auto;
+                display: block;
+                margin-top: -7px;
+              "
+            />
+          </div>
+        </div>
+        <div style="display: flex; justify-content: center">
+          <p
+            style="
+              color: #555555;
+              margin-top: 14px;
+              margin-bottom: -7px;
+              font-family: Source Sans Pro;
+            "
+          >
+            &copy; 2026 Lyon Chow. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
