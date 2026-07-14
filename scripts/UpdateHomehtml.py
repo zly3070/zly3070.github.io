@@ -114,7 +114,7 @@ def generate_post_item(items) -> str:
             <div style="display:flex; flex-direction:column; gap:1px">
               <a
                 href="somePosts/{filename}"
-                style="font-size: 18px; font-weight: 600; width: fit-content;"
+                style="font-size: 18px; width: fit-content;"
                 class="post-title"
                 target="main-frame"
               >
