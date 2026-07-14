@@ -9,6 +9,7 @@ on: # 触发条件
       - ".github/workflows/AutoPost.yml"
       - "scripts/UpdateHomehtml.py"
       - "style.css"
+      - "about.html"
 
 # 赋予部署权限
 permissions: 
