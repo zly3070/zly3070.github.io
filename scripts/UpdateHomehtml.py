@@ -61,39 +61,72 @@ def format_date(date_str) -> str:
 
 # ========== Step3: Generate HTML Post List ==========
 
+def extract_description(md_filename: str) -> str:
+    """从 md 文件开头提取第一段 _斜体_ 中的纯文本"""
+    filepath = os.path.join('somePosts', md_filename)
+    if not os.path.exists(filepath):
+        return ""
+    
+    with open(filepath, 'r', encoding='utf-8') as f:
+        content = f.read()
+    
+    # 匹配第一组 _..._ 或 *...* 中的内容
+    match = re.search(r'_(.+?)_', content, re.DOTALL)
+    if not match:
+        match = re.search(r'\*(.+?)\*', content, re.DOTALL)
+    if not match:
+        return ""
+    
+    text = match.group(1)
+    
+    # 清除 Markdown 格式：**加粗**、`代码`、~~删除线~~ 等
+    text = re.sub(r'\*\*(.+?)\*\*', r'\1', text)  # **加粗**
+    text = re.sub(r'`(.+?)`', r'\1', text)         # `代码`
+    text = re.sub(r'~~(.+?)~~', r'\1', text)       # ~~删除线~~
+    text = re.sub(r'\[(.+?)\]\(.+?\)', r'\1', text) # [链接](url)
+    text = re.sub(r'!\[.*?\]\(.+?\)', '', text)     # ![图片](url)
+    text = text.strip()
+    
+    # 限制长度（比如 150 字），防止简介太长
+    if len(text) > 150:
+        text = text[:147] + "..."
+    
+    return text
+
 def generate_post_item(items) -> str:
-  """
-    生成文章列表的 HTML 代码
-    每一项的格式：
-    <div>
-      <span style="font-family: Consolas; font-size: 14px; color: #666666">26 Mar 2026 </span>
-      <a href="somePosts/2026-03-26-想学计算机图形学.html" style="font-size: 18px" class="post-link" target="main-frame">想学计算机图形学</a>
-    </div>
-    """
-  html_items = []
+    html_items = []
 
-  for date_str, title, filename in items:
-    formatted_date = format_date(date_str)
+    for date_str, title, filename in items:
+        formatted_date = format_date(date_str)
 
-    # 生成一条文章列表项
-    item = f'''
-              <div>
-                <span 
-                  style="font-family: Consolas; font-size: 14px; color: #666666"
-                  >{formatted_date} </span
-                  ><a
-                    href="somePosts/{filename}"
-                    style="font-size: 18px"
-                    class="post-link"
-                    target="main-frame"
-                    >{title}</a
-                  >
-              </div>'''
-    
-    html_items.append(item)
-    
-  # 用换行符拼接所有项
-  return '\n'.join(html_items)
+        # 提取简介
+        md_filename = filename.replace('.html', '.md')
+        description = extract_description(md_filename)
+
+        # 有简介才生成 p 标签
+        desc_html = f'<p style="font-size: 16px; margin: 4px 0 0 0;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{description}</p>' if description else ''
+
+        item = f'''
+          <div style="display:flex">
+            <span style="font-family: Consolas; font-size: 16px; color: #666666; white-space: nowrap;">
+              {formatted_date}&nbsp
+            </span>
+            <div style="display:flex; flex-direction:column; gap:1px">
+              <a
+                href="somePosts/{filename}"
+                style="font-size: 18px; font-weight: 600;"
+                class="post-title"
+                target="main-frame"
+              >
+                {title}
+              </a>
+              {desc_html}
+            </div>
+          </div>'''
+
+        html_items.append(item)
+
+    return '\n'.join(html_items)
 
 # ========== Step4: Update Homehtml ==========
 

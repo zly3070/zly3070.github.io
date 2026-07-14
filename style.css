@@ -1,70 +1,78 @@
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: "Roboto Condensed","Arial", serif, "Helvetica", "Arial", sans-serif;
-        line-height: 1.5;
-        color: #333;
-        /* font-style: normal; */
-        text-autospace: normal;
-      }
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+font-family: "Roboto Condensed","Arial", serif, "Helvetica", "Arial", sans-serif;
+line-height: 1.5;
+color: #333;
+/* font-style: normal; */
+text-autospace: normal;
+}
 
-      body {
-        display: flex;
-        min-height: 100vh;
-      }
+body {
+display: flex;
+min-height: 100vh;
+}
 
-      #top {
-        display: flex;
-        flex-direction: column;
-        padding: 23px 23px;
-        width: 250px;
-        min-height: 100vh;
-        border-right: 1px solid #e5e5e5;
-        background-color: #f7f7f7;
-        flex-shrink: 0;
-      }
+#top {
+display: flex;
+flex-direction: column;
+padding: 23px 23px;
+width: 250px;
+min-height: 100vh;
+border-right: 1px solid #e5e5e5;
+background-color: #f7f7f7;
+flex-shrink: 0;
+}
 
-      #content_container {
-        display: flex;
-        flex-direction: column;
-        flex: 1;
-        min-height: 100vh;
-      }
+#content_container {
+display: flex;
+flex-direction: column;
+flex: 1;
+min-height: 100vh;
+}
 
-      #main-frame {
-        flex: 1;
-        border: none;
-        width: 100%;
-      }
+#main-frame {
+flex: 1;
+border: none;
+width: 100%;
+}
 
-      #email-link {
-        text-decoration: none;
-      }
+#email-link {
+text-decoration: none;
+}
 
-      #email-link:hover {
-        text-decoration: underline;
-      }
+#email-link:hover {
+text-decoration: underline;
+}
 
-      #github-link {
-        text-decoration: none;
-      }
+#github-link {
+text-decoration: none;
+}
 
-      #github-link:hover {
-        text-decoration: underline;
-      }
+#github-link:hover {
+text-decoration: underline;
+}
 
-      .post-link {
-        text-decoration: none;
-      }
-      .post-link:hover {
-        color: #aa0707;
-      }
+.post-link {
+text-decoration: none;
+}
+.post-link:hover {
+color: #aa0707;
+}
+
+.post-title {
+text-decoration: none;
+font-weight: 600;
+}
+.post-title:hover {
+color: #aa0707;
+}
 
 footer {
-  display: flex;
-  flex-direction: column;
-  padding: 23px 150px;
-  flex-shrink: 0;
+display: flex;
+flex-direction: column;
+padding: 23px 150px;
+flex-shrink: 0;
 }
 
