@@ -1,0 +1,14 @@
+# 本地预览临时目录
+.preview/
+
+# Python 缓存
+__pycache__/
+*.pyc
+*.pyo
+
+# VSCode 设置
+.vscode/
+
+# 系统文件
+.DS_Store
+Thumbs.db

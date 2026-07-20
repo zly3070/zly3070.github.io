@@ -29,8 +29,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4 # 使用官方checkout动作，将自己代码拉到服务器上
 
-      - name: Install Pandoc
-        run: sudo apt-get update && sudo apt-get install -y pandoc # -y自动确认
+      - name: Cache Pandoc
+        id: cache-pandoc
+        uses: actions/cache@v4
+        with:
+          path: /usr/local/bin/pandoc
+          key: ${{ runner.os }}-pandoc-3.10
+
+      - name: Setup Pandoc
+        if: steps.cache-pandoc.outputs.cache-hit != 'true'
+        uses: pandoc/actions/setup@v1
+        with:
+          version: 3.10
 
       - name: Convert all .md files to .html
         run: |
@@ -48,9 +58,11 @@ jobs:
               echo "  Date: $date_part"
               echo "  Title: $title_part"
 
-              pandoc "$file" \
+                            pandoc "$file" \
+                -f markdown+tex_math_dollars \
                 --template=template.html \
                 --metadata title="${title_part}" \
+                --mathjax \
                 -o "somePosts/${filename}.html"
 
               # 保存住日期、title、文件名信息，便于python脚本读取
