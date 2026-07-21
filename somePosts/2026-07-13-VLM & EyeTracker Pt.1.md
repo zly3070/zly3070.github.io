@@ -438,4 +438,3 @@ _分个P，前方的道路之后再来探索吧_
 [^1]: [Attention Is All You Need](https://arxiv.org/html/1706.03762)
 [^2]:[【官方双语】GPT是什么？直观解释Transformer | 深度学习第5章](https://www.bilibili.com/video/BV13z421U7cs/?share_source=copy_web&vd_source=b63f5927460d4d5518043823314b224c)
 [^3]:[Self-Attention机制的计算详解_自注意力机制公式-CSDN博客](https://blog.csdn.net/qq_41915623/article/details/125161008)
-

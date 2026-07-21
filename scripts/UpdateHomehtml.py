@@ -111,7 +111,7 @@ def generate_post_item(items) -> str:
             <span style="font-family: Consolas; font-size: 16px; color: #666666; white-space: nowrap;">
               {formatted_date}&nbsp
             </span>
-            <div style="display:flex; flex-direction:column; gap:1px">
+            <div style="display:flex; flex-direction:column; gap:1px; width:400px">
               <a
                 href="somePosts/{filename}"
                 style="font-size: 18px; width: fit-content;"
