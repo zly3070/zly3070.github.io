@@ -22,6 +22,7 @@ We prompt the model to point out the positions that match each reasoning step. R
 
 原因大概是在Chart-FR1中，模型是经过一系列SFT的，不是靠prompt一个现成的通用MLLM就能直接学会的。所以ChartPoint的贡献是通过生成BBox和重渲染，主动建立这种对应关系。
 
+<<<<<<< Updated upstream
 <img src="../images/ChartPoint-BBox.webp" alt="BBox" style="zoom:50%;" />
 
 为了达成这一点，他们引入了一个利用图表-代码对和高级LLM的自动标注管道，给予准确的步骤分解和关键信息定位。
@@ -63,3 +64,6 @@ LLMs会通过在所有“定位型”步骤的关键位置插入特殊字符来�
 > 晒晒少女给我做的便当，是关系到了\*\*LOVE\*\*之后还是什么阶段会送的？搞不清楚了，总之是今天点开对话突然看到的，除此之外还送了她自己的卡片和剥皮雕像，也是很恶趣味了。。。
 
 [^1]: [ChartPoint: Guiding MLLMs with Grounding Reflection for Chart Reasoning](https://arxiv.org/html/2512.00305v1)
+=======
+[^1]: [ChartPoint: Guiding MLLMs with Grounding Reflection for Chart Reasoning](https://arxiv.org/html/2512.00305v1)
+>>>>>>> Stashed changes
