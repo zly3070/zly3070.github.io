@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>最近</title>
+    <!-- <link rel="stylesheet" href="../style.css" /> -->
+    <!-- 使用 MathJax 渲染公式 -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
+      async
+    ></script>
+    <style>
+      * {
+        box-sizing: border-box;
+        font-family:
+          "Roboto Condensed",
+          -apple-system,
+          "Microsoft YaHei",
+          "Arial",
+          system-ui;
+        line-height: 1.5;
+        color: #333;
+        /* font-style: normal; */
+        text-autospace: normal;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #main {
+        display: flex;
+        flex-direction: column;
+        padding: 50px 150px;
+        flex: 1;
+      }
+
+      footer {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        padding: 23px 150px;
+        flex-shrink: 0;
+      }
+
+      footer * {
+        padding: 0;
+        margin: 0;
+      }
+
+      .post-link {
+        text-decoration: none;
+      }
+      .post-link:hover {
+        color: #aa0707;
+      }
+
+      .post-title {
+        text-decoration: none;
+        font-weight: 700;
+      }
+      .post-title:hover {
+        color: #aa0707;
+      }
+
+      /* 继承的优先级是最低的 */
+      blockquote {
+        color: #777777;
+        border-left: 5px solid #efefef;
+        padding-left: 20px; /* border 和文字之间的空隙 */
+      }
+      blockquote * {
+        color: #777777;
+      }
+
+      code {
+        background-color: #efefef;
+        padding: 2px;
+        border-radius: 2px;
+      }
+
+      a {
+        text-decoration: none;
+      }
+      a:hover {
+        color: #aa0707;
+      }
+    </style>
+  </head>
+  <body>
+    <main id="main">
+      <h1 style="margin: 0px; white-space: nowrap">
+        <a
+          href="home.html"
+          class="post-link"
+          target="main-frame"
+          style="text-decoration: none; margin: 0px"
+          >~/</a
+        >
+        最近
+      </h1>
+      <hr width="100%" style="margin-top: 0px; margin-bottom: 40px" />
+
+      <div
+        id="post-list"
+        style="display: flex; flex-direction: column; gap: 20px"
+      ></div>
+      <!-- 文章列表由 JS 填充 -->
+    </main>
+    <hr style="width: calc(100% - 300px); margin: auto" />
+    <footer>
+      <div style="display: flex; flex-direction: column">
+        <div style="display: flex">
+          <div
+            style="display: flex; align-self: flex-start; gap: 70px; flex: 1"
+          >
+            <div style="display: flex; flex-direction: column">
+              <p style="font-size: 20px; margin-bottom: 16px; font-weight: 800">
+                Friends
+              </p>
+              <p>
+                <a href="https://tzblog.tech" target="_blank" class="post-link"
+                  >小周的笔记</a
+                >
+              </p>
+              <p>
+                <a
+                  href="https://homura.great-site.net/blog/?i=1"
+                  target="_blank"
+                  class="post-link"
+                  >lhc's ideas</a
+                >
+              </p>
+              <p>Q</p>
+              <p>
+                <a href="https://naoh3326.xyz" target="_blank" class="post-link"
+                  >NaOh</a
+                >
+              </p>
+            </div>
+            <div style="display: flex; flex-direction: column">
+              <p style="margin-bottom: 16px; font-size: 20px; font-weight: 800">
+                Something to comment?
+              </p>
+              <p style="color: #acb02b">Coming soon</p>
+            </div>
+          </div>
+
+          <div style="margin-left: auto">
+            <img
+              src="images/footer.webp"
+              alt="footer-links"
+              style="
+                width: 300px;
+                margin-left: auto;
+                display: block;
+                margin-top: -7px;
+              "
+            />
+          </div>
+        </div>
+        <div style="display: flex; justify-content: center">
+          <p
+            style="
+              color: #555555;
+              margin-top: 14px;
+              margin-bottom: -7px;
+              font-family: Source Sans Pro;
+            "
+          >
+            &copy; 2026 Lyon Chow. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      (function () {
+        // 读取 post_list.json（python 生成的静态数据）
+        fetch("post_list.json")
+          .then(function (res) {
+            if (!res.ok)
+              throw new Error("post_list.json 加载失败: " + res.status);
+            return res.json();
+          })
+          .then(function (posts) {
+            renderPostList(posts);
+          })
+          .catch(function (err) {
+            console.error(err);
+          });
+
+        function renderPostList(posts) {
+          var container = document.getElementById("post-list");
+          if (!container) return;
+
+          if (!posts || posts.length === 0) {
+            container.innerHTML = "<p>还没有文章。</p>";
+            return;
+          }
+
+          var html = "";
+
+          posts.forEach(function (post) {
+            var desc = post.description
+              ? '<p style="font-size:16px; margin:2px 0 0 0;">' +
+                escapeHtml(post.description) +
+                "</p>"
+              : "";
+
+            html +=
+              '<div style="display:flex;">' +
+              '<span style="font-family:Consolas; font-size:16px; color:#666666; white-space:nowrap;">' +
+              formatDate(post.date) +
+              "&nbsp" +
+              "</span>" +
+              '<div style="display:flex; flex-direction:column; gap:3px; width:400px;">' +
+              '<a href="somePosts/' +
+              encodeURI(post.filename) +
+              '" style="font-size:18px; width:fit-content;" class="post-title" target="main-frame">' +
+              escapeHtml(post.title) +
+              "</a>" +
+              desc +
+              "</div>" +
+              "</div>";
+          });
+
+          container.innerHTML = html;
+        }
+
+        // 转义 HTML，防止特殊字符破坏结构
+        function escapeHtml(str) {
+          var div = document.createElement("div");
+          div.textContent = String(str == null ? "" : str);
+          return div.innerHTML;
+        }
+
+        // 将 "2026-03-26" 格式化为 "26 Mar 2026"
+        function formatDate(dateStr) {
+          if (!dateStr) return "";
+          var parts = dateStr.split("-");
+          if (parts.length !== 3) return dateStr;
+          var months = [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
+          ];
+          var m = parseInt(parts[1], 10) - 1;
+          var monthName = months[m] || parts[1];
+          return parseInt(parts[2], 10) + " " + monthName + " " + parts[0];
+        }
+      })();
+    </script>
+  </body>
+</html>

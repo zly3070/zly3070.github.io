@@ -9,6 +9,7 @@
 
 import os
 import re
+import json
 from datetime import datetime
 
 # ========== Step1: Read post_list.txt ==========
@@ -128,6 +129,25 @@ def generate_post_item(items) -> str:
 
     return '\n'.join(html_items)
 
+def generate_post_list_json(items) -> None:
+    """生成 post_list.json，供前端 JS 读取并渲染卡片"""
+    data = []
+    for date_str, title, filename in items:
+        md_filename = filename.replace('.html', '.md')
+        description = extract_description(md_filename)
+
+        data.append({
+            "date": date_str,
+            "title": title,
+            "description": description,
+            "filename": filename
+        })
+
+    with open('post_list.json', 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+    print(f"成功生成 post_list.json（共 {len(data)} 篇文章）")
+
 # ========== Step4: Update Homehtml ==========
 
 def update_home_html(new_post_items):
@@ -182,11 +202,8 @@ if __name__ == '__main__':
     print("没有文章需要更新")
     exit(0)
 
-  # 2、生成 HTML
-  post_items = generate_post_item(items)
-
-  # 3、更新 home.html
-  update_home_html(post_items)
+      # 2、生成 post_list.json（供前端 JS 读取渲染卡片）
+  generate_post_list_json(items)
 
   print("完成")
 

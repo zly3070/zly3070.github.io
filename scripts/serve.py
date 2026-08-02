@@ -11,6 +11,7 @@
 import os
 import sys
 import re
+import json
 import subprocess
 import http.server
 import socketserver
@@ -206,6 +207,24 @@ def generate_post_items(items):
     return '\n'.join(html_items)
 
 
+def generate_post_list_json(preview_dir, items):
+    """从文章列表生成 post_list.json，供前端 JS 读取"""
+    data = []
+    for date_str, title, filename in items:
+        md_filename = filename.replace('.html', '.md')
+        description = extract_description(md_filename)
+        data.append({
+            "date": date_str,
+            "title": title,
+            "description": description,
+            "filename": filename
+        })
+
+    out = preview_dir / "post_list.json"
+    out.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding='utf-8')
+    print(f"  ✓ 已生成 post_list.json（共 {len(data)} 篇文章）")
+
+
 # ========== 第五步：生成 home.html（到临时目录）==========
 
 def generate_home_html(preview_dir, post_items):
@@ -311,6 +330,9 @@ def main():
     
     print("\n📄 生成文章列表...")
     post_items = generate_post_items(post_list) if post_list else ""
+    
+    print("\n📄 生成 post_list.json...")
+    generate_post_list_json(preview_dir, post_list)
     
     print("\n🏠 生成 home.html...")
     generate_home_html(preview_dir, post_items)
