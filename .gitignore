@@ -12,3 +12,7 @@ __pycache__/
 # 系统文件
 .DS_Store
 Thumbs.db
+
+# 本地密钥（Unsplash Access Key 等），绝不能进仓库
+.env
+.env.local

@@ -233,6 +233,33 @@ def generate_post_list_json(preview_dir, items):
     print(f"  ✓ 已生成 post_list.json（共 {len(data)} 篇文章）")
 
 
+# ========== 照片墙数据：只检查，绝不请求 API ==========
+
+def check_photos_json(preview_dir):
+    """
+    about.html 的照片墙读的是 photos.json。
+    这里【只复制、只检查】—— 配额必须由你手动跑 fetch_photos.py 时消耗。
+    本脚本永远不会自己去请求 Unsplash API，所以随便跑多少次都不花配额。
+    """
+    src = ROOT_DIR / "photos.json"
+    dst = preview_dir / "photos.json"
+
+    if src.exists():
+        shutil.copy2(src, dst)
+        try:
+            data = json.loads(src.read_text(encoding="utf-8"))
+            n = len(data.get("photos", []))
+            when = data.get("updated", "?")
+        except Exception:
+            n, when = "?", "?"
+        print(f"  ✓ photos.json 已就位（{n} 张，更新于 {when}）")
+        print("    读取本地快照，未消耗任何 API 配额")
+    else:
+        print("  ⚠ 没找到 photos.json，照片墙会是空的")
+        print("    想拉取照片请手动运行： python scripts/fetch_photos.py")
+        print("    （本脚本不会自己请求 Unsplash API，放心跑）")
+
+
 # ========== 第五步：生成 home.html（到临时目录）==========
 
 def generate_home_html(preview_dir, post_items):
@@ -366,6 +393,9 @@ def main():
     
     print("\n👤 处理 about.html...")
     generate_about_html(preview_dir)
+    
+    print("\n📷 检查照片墙数据...")
+    check_photos_json(preview_dir)
     
     print("\n🌍 启动本地服务器...")
     start_server(preview_dir)

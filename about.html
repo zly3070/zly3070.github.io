@@ -28,6 +28,64 @@
         padding: 0;
         margin: 0;
       }
+
+      /* ===== 照片墙：正宗瀑布流（绝对定位 + 填充最矮列）=====
+         和 Unsplash 个人主页同一套原理：
+         每张图从文档流里拿出来，由 JS 指定精确的 left/top，
+         下一张放进当前最矮的那一列，列与列高度错开、不留洞。
+         列数和列宽都由容器宽度算出来，没有写死的图片宽度。 */
+      #photo-wall {
+        position: relative; /* 绝对定位的参照物 */
+        margin-top: 20px;
+      }
+
+      #photo-wall .wall-item {
+        position: absolute; /* left / top 由 JS 给 */
+        margin: 0;
+        background-color: #efefef; /* 主色铺底，图没到时也不是刺眼的白 */
+        /* 模糊占位铺在 figure 上（由 JS 设 background-image），
+           这样它只盖住图片区域，不会溢到下面的署名文字上 */
+        background-size: cover;
+        background-position: center;
+        overflow: hidden;
+      }
+
+      #photo-wall img {
+        display: block;
+        width: 100%;
+        height: auto;
+        /* 让浏览器在图片下载完成之前就知道该占多高，
+           否则加载时页面会不断往下跳 */
+        aspect-ratio: var(--ratio);
+        opacity: 0;
+        transition: opacity 0.35s ease;
+      }
+
+      #photo-wall img.is-loaded {
+        opacity: 1;
+      }
+
+      #photo-wall figcaption {
+        font-size: 12px;
+        color: #898e96;
+        margin-top: 5px;
+        line-height: 1.35;
+        /* 显式给背景色：否则 figure 上的模糊背景会透上来糊住文字 */
+        background-color: #fff;
+      }
+
+      #photo-wall figcaption a {
+        color: inherit;
+      }
+
+      #photo-wall figcaption a:hover {
+        color: #aa0707;
+      }
+
+      .wall-more {
+        margin-top: 14px;
+        font-style: italic;
+      }
     </style>
   </head>
   <body>
@@ -59,24 +117,18 @@
       <p>你应该想象不到为了让这只奶牛在该字体下正常显示，我花了多少功夫</p>
 
       <hr />
-      <p>Coming soon …</p>
-      <a
-        href="https://unsplash.com/@zhoulinyao"
-        class="post-link"
-        target="_blank"
-        style="text-decoration: none; margin: 0px; font-style: italic"
-        >在 Unsplash 查看完整作品集 →</a
-      >
-      <iframe
-        src="https://unsplash.com/@zhoulinyao"
-        width="100%"
-        height="600"
-        frameborder="0"
-        allowfullscreen
-        loading="lazy"
-        sandbox="allow-scripts allow-same-origin"
-      >
-      </iframe>
+      <p id="photo-wall-status" style="color: #898e96">照片墙加载中…</p>
+      <div id="photo-wall"></div>
+      <p class="wall-more">
+        <a
+          id="wall-all"
+          href="https://unsplash.com/@zhoulinyao"
+          class="post-link"
+          target="_blank"
+          rel="noopener"
+          >在 Unsplash 查看我的全部作品 →</a
+        >
+      </p>
     </main>
     <hr style="width: calc(100% - 300px); margin: auto" />
     <footer>
@@ -144,5 +196,266 @@
         </div>
       </div>
     </footer>
+
+    <script>
+      /* 照片墙：正宗瀑布流
+         —— 图片顺序 = photos.json 里的顺序（也就是 API 返回的顺序）
+         —— 每张图放进「当前最矮的那一列」，和 Unsplash 个人主页同一套算法
+         —— 列数/列宽全部由容器宽度算出，不写死
+         注：填充最矮列是「不留洞」的必要条件，代价是视觉顺序在
+             高矮差别很大时可能和源顺序略错位 —— Unsplash 官网也是如此。 */
+      (function () {
+        var wall = document.getElementById("photo-wall");
+        var status = document.getElementById("photo-wall-status");
+        var allLink = document.getElementById("wall-all");
+
+        var COL_MIN = 200; // 每列最小宽度，决定能塞几列
+        var COL_MAX = 3; // 最多 3 列，和 Unsplash 个人主页一致
+        var GAP = 10; // 列间距 / 行间距
+        var CAP_H = 26; // 署名文字大约占的高度
+
+        var photos = [];
+
+        /* ===== blurhash：把很短的字符串解码成模糊占位图 =====
+           blurhash 官方包只有 ESM，没有 UMD，所以普通 <script src> 引不了。
+           这里用动态 import() 按需加载，并把「加载完成」和「重新铺背景」串起来，
+           避免出现「背景铺的时候库还没到位」的时序问题。
+           任何一步失败都只是退化成纯主色占位，不影响照片显示。 */
+        var blurhashDecode = null; // 拿到真库之前保持 null
+
+        function loadBlurhash() {
+          if (blurhashDecode) return Promise.resolve(); // 已经好了
+
+          return new Promise(function (resolve) {
+            var url = "https://cdn.jsdelivr.net/npm/blurhash@2.0.5/dist/index.mjs";
+
+            // ⚠ 这里必须用 Function 构造器，不能直接写 import(url)。
+            //   直接写在某些解析上下文里会被当成静态 import 声明，
+            //   整段脚本会在【解析阶段】就抛 SyntaxError 直接退出
+            //   （连 fetch 都跑不到，页面永远停在"加载中…"）。
+            //   包进 Function 之后，它就是运行时的动态 import，稳。
+            var dynImport;
+            try {
+              dynImport = new Function("u", "return import(u)");
+            } catch (e) {
+              console.warn("[blurhash] 不支持动态 import，退回纯主色占位");
+              resolve();
+              return;
+            }
+
+            dynImport(url)
+              .then(function (mod) {
+                blurhashDecode = mod.decode;
+                resolve(); // 库到位了，可以排版了
+              })
+              .catch(function (err) {
+                console.warn("[blurhash] 加载失败，退回纯主色占位：", err);
+                resolve(); // 失败也要继续排版，不能卡住照片墙
+              });
+          });
+        }
+
+        function applyBlurhash(img, p) {
+          if (!p.blur_hash || !blurhashDecode) return; // 库没到位就直接用纯主色
+          // 背景铺在 figure 上而不是 img 上：
+          // 铺在 img 上时，它会盖住 figure 的整个区域（含署名那一行），
+          // 导致「Linyao Zhou on Unsplash」被模糊图层糊住看不清。
+          var fig = img.closest(".wall-item");
+          if (!fig) return;
+          try {
+            var w = 32;
+            var h = Math.max(1, Math.round((32 * p.height) / p.width));
+            var pixels = blurhashDecode(p.blur_hash, w, h);
+            var cv = document.createElement("canvas");
+            cv.width = w;
+            cv.height = h;
+            var ctx = cv.getContext("2d");
+            var idata = ctx.createImageData(w, h);
+            idata.data.set(pixels);
+            ctx.putImageData(idata, 0, 0);
+            fig.style.backgroundImage = "url(" + cv.toDataURL() + ")";
+          } catch (e) {
+            /* 解码失败就保持纯主色，无所谓 */
+          }
+        }
+
+        fetch("photos.json")
+          .then(function (res) {
+            if (!res.ok) throw new Error("photos.json 加载失败: " + res.status);
+            return res.json();
+          })
+          .then(function (data) {
+            photos = (data && data.photos) || [];
+            if (!photos.length) {
+              if (status) status.textContent = "还没有照片。";
+              return;
+            }
+            if (status) status.remove();
+            if (data.profile && allLink) allLink.href = data.profile;
+
+            // 先等 blurhash 库到位，再排版。
+            // 顺序很重要：layout() 内部会 wall.innerHTML="" 重建元素，
+            // 如果库晚到、背景先画在旧元素上，一次重排就把它们全废了
+            // （这曾经是个真 bug：painted=30 但页面上一个都看不到）。
+            loadBlurhash()
+              .then(function () {
+                layout();
+                watchResize();
+              });
+          })
+          .catch(function (err) {
+            // 静默失败最坑人，这里明确告诉访客
+            console.error(err);
+            if (status) {
+              status.textContent =
+                "照片墙没能加载出来（photos.json 缺失或损坏）。";
+            }
+          });
+
+        /* ===== 正宗瀑布流核心 ===== */
+        function layout() {
+          var total = wall.clientWidth;
+          if (!total || !photos.length) return;
+
+          // 列数由容器宽度算出来
+          var cols = Math.max(
+            1,
+            Math.min(COL_MAX, Math.floor((total + GAP) / (COL_MIN + GAP)))
+          );
+          var colW = (total - GAP * (cols - 1)) / cols;
+
+          wall.innerHTML = "";
+          wall.style.height = "0px";
+
+          // 每一列当前累积的高度 —— 这就是「最矮的列」的判据
+          var colH = [];
+          for (var c = 0; c < cols; c++) colH.push(0);
+
+          photos.forEach(function (p, seq) {
+            // 1) 按原始宽高比，算出它在这个列宽下会有多高
+            var imgH = colW * (p.height / p.width);
+            var itemH = imgH + CAP_H;
+
+            // 2) 找当前最矮的列（从 0 开始遍历，等高时取最左列，
+            //    所以第 1、2、3 张会分别落在第 1、2、3 列顶部）
+            var best = 0;
+            for (var i = 1; i < cols; i++) {
+              if (colH[i] < colH[best]) best = i;
+            }
+
+            // 3) 造元素并精确摆位
+            var fig = buildFigure(p, colW);
+            // ★ 把「源顺序下标」绑在元素上。
+            //   不能之后用 img 的 DOM 下标去查 photos —— appendChild 的顺序是
+            //   「落点顺序」不是源顺序，两套下标会错位（这曾经是个真 bug）。
+            fig.dataset.photoIndex = String(seq);
+            fig.style.width = colW + "px";
+            fig.style.left = best * (colW + GAP) + "px";
+            fig.style.top = colH[best] + "px";
+            wall.appendChild(fig);
+
+            // 4) 累积这一列的高度
+            colH[best] += itemH + GAP;
+          });
+
+          // 5) 容器高度 = 最高那一列，否则下面内容会盖住照片
+          var maxH = 0;
+          for (var k = 0; k < cols; k++) {
+            if (colH[k] > maxH) maxH = colH[k];
+          }
+          wall.style.height = Math.max(0, maxH - GAP) + "px";
+
+          revealImages();
+        }
+
+        function buildFigure(p, colW) {
+          var fig = document.createElement("figure");
+          fig.className = "wall-item";
+          fig.style.backgroundColor = p.color || "#efefef";
+
+          var a = document.createElement("a");
+          a.href = p.page || "#";
+          a.target = "_blank";
+          a.rel = "noopener";
+
+          var img = document.createElement("img");
+          img.src = p.src;
+          if (p.src2x) img.srcset = p.src + " 1x, " + p.src2x + " 2x";
+          img.sizes = Math.round(colW) + "px"; // 明确告诉浏览器实际显示宽度，别让它猜
+          img.alt = p.alt || "Photo by " + (p.author || "the author");
+          img.width = p.width;
+          img.height = p.height;
+          img.loading = "lazy";
+          img.decoding = "async";
+          img.style.setProperty("--ratio", p.width + " / " + p.height);
+
+          a.appendChild(img);
+          fig.appendChild(a);
+
+          var cap = document.createElement("figcaption");
+          var au = document.createElement("a");
+          au.href = p.author_url || "#";
+          au.target = "_blank";
+          au.rel = "noopener";
+          au.textContent = p.author || "";
+          cap.appendChild(au);
+          cap.appendChild(document.createTextNode(" on Unsplash"));
+          fig.appendChild(cap);
+
+          return fig;
+        }
+
+        function revealImages() {
+          var figs = wall.querySelectorAll(".wall-item");
+          Array.prototype.forEach.call(figs, function (fig) {
+            // 读回源顺序下标，而不是用 DOM 位置去猜
+            var p = photos[Number(fig.dataset.photoIndex)];
+            var img = fig.querySelector("img");
+            if (!img || !p) return;
+
+            // ⚠ 必须把「现在这个 img」一起传进去。
+            //   layout() 会先 wall.innerHTML="" 再重建，所以队列里的回调
+            //   如果只捕获闭包里的 img，等库到位时那些元素早被删了 ——
+            //   背景会画在已经不在 DOM 里的元素上，页面上一张都看不到。
+            applyBlurhash(img, p);
+
+            function show() {
+              img.classList.add("is-loaded");
+            }
+            if (img.complete) show();
+            else img.addEventListener("load", show);
+            img.addEventListener("error", show); // 失败也露出来，别留白
+          });
+        }
+
+        // 容器宽度变了就重新分列（弹性响应）
+        function watchResize() {
+          if (typeof ResizeObserver === "undefined") {
+            // 老浏览器兜底：只能监听窗口
+            var lastW = wall.clientWidth;
+            window.addEventListener("resize", function () {
+              if (wall.clientWidth === lastW) return;
+              lastW = wall.clientWidth;
+              layout();
+            });
+            return;
+          }
+
+          // ⚠ 必须用 ResizeObserver 而不是 window 的 resize 事件：
+          //   照片全部加载完后页面会出现纵向滚动条，容器宽度会从 980 掉到 965，
+          //   但这不是窗口尺寸变化，window 的 resize 事件根本不会触发 ——
+          //   结果就是版面按旧宽度排好后再也不更新（这曾经是个真 bug）。
+          var lastW = wall.clientWidth;
+          var timer = null;
+          new ResizeObserver(function () {
+            var w = wall.clientWidth;
+            if (w === lastW) return;
+            lastW = w;
+            clearTimeout(timer);
+            timer = setTimeout(layout, 120); // 防抖，避免布局过程中反复触发
+          }).observe(wall);
+        }
+      })();
+    </script>
   </body>
 </html>
