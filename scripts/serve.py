@@ -14,10 +14,18 @@ import re
 import json
 import subprocess
 import http.server
-import socketserver
 import webbrowser
 import shutil
 from pathlib import Path
+
+# Windows 的 Python 默认用 GBK 编码往控制台输出，
+# 而下面的 print 里有 🚀 ✓ 📁 这些字符，会直接抛 UnicodeEncodeError 崩掉。
+# 这里把标准输出/错误流强制成 UTF-8，脚本就能在任何终端里跑。
+for _stream in (sys.stdout, sys.stderr):
+    try:
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+    except (AttributeError, ValueError):
+        pass  # Python < 3.7 或被重定向到不支持的对象时，跳过
 
 # 项目根目录
 ROOT_DIR = Path(__file__).parent.parent
@@ -289,23 +297,42 @@ def start_server(preview_dir, port=8000):
         
         def log_message(self, format, *args):
             pass
-    
+
+    def make_server(p):
+        # 用多线程服务器：浏览器加载一个页面会并发抓 html/css/js/图片，
+        # 单线程的 TCPServer 遇到一个慢连接就会把整个服务器卡住。
+        # allow_reuse_address 让刚关掉的端口能立刻重新绑定。
+        srv = http.server.ThreadingHTTPServer(("127.0.0.1", p), QuietHandler)
+        srv.allow_reuse_address = True
+        return srv
+
+    # 从 port 开始逐个试，别用递归（递归试到端口耗尽会栈溢出）
+    server = None
+    for candidate in range(port, port + 10):
+        try:
+            server = make_server(candidate)
+            port = candidate
+            break
+        except OSError:
+            print(f"  端口 {candidate} 已被占用，尝试 {candidate + 1} ...")
+
+    if server is None:
+        print(f"  ✗ 端口 {port} ~ {port + 9} 全被占用，请先关掉占用的程序")
+        return
+
+    print(f"\n{'=' * 50}")
+    print(f"  🌐 本地预览地址: http://localhost:{port}")
+    print(f"  📁 临时目录: {preview_dir}")
+    print(f"  ℹ️  按 Ctrl+C 停止服务器")
+    print(f"  💡 改完文件要重新运行本脚本，预览才会更新")
+    print(f"{'=' * 50}\n")
+
+    webbrowser.open(f"http://localhost:{port}")
     try:
-        server = socketserver.TCPServer(("", port), QuietHandler)
-        print(f"\n{'=' * 50}")
-        print(f"  🌐 本地预览地址: http://localhost:{port}")
-        print(f"  📁 临时目录: {preview_dir}")
-        print(f"  ℹ️  按 Ctrl+C 停止服务器")
-        print(f"  💡 修改文件后，重新运行本脚本即可刷新")
-        print(f"{'=' * 50}\n")
-        
-        webbrowser.open(f"http://localhost:{port}")
         server.serve_forever()
-    except OSError:
-        print(f"  端口 {port} 已被占用，尝试端口 {port+1}...")
-        start_server(preview_dir, port + 1)
     except KeyboardInterrupt:
         print("\n  服务器已停止")
+    finally:
         server.server_close()
 
 
