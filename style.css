@@ -1,78 +1,251 @@
+/* ============================================================
+   zly3070.github.io — 全站唯一样式表
+   以前 about.html / Recent.html / template.html 各自抄了一份
+   一模一样的 <style>，改一处忘两处。现在全部收进这里。
+   页面自己的 <style> 只留「这个页面独有的布局」，不再重复基础样式。
+   ============================================================ */
+
+/* ---------- 1. 全局基础（所有页面共用） ---------- */
+
 * {
-margin: 0;
-padding: 0;
-box-sizing: border-box;
-font-family: "Roboto Condensed",-apple-system,"Microsoft YaHei","Arial", system-ui;
-line-height: 1.5;
-color: #333;
-/* font-style: normal; */
-text-autospace: normal;
+  box-sizing: border-box;
+  font-family:
+    "Roboto Condensed",
+    -apple-system,
+    "Microsoft YaHei",
+    "Arial",
+    system-ui;
+  line-height: 1.5;
+  color: #333;
+  text-autospace: normal;
+}
+
+html {
+  /* 让没有侧栏的页面（文章、关于、最近）各自占满一屏 */
+  min-height: 100vh;
 }
 
 body {
-display: flex;
-min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-#top {
-display: flex;
-flex-direction: column;
-padding: 23px 23px;
-width: 250px;
-min-height: 100vh;
-border-right: 1px solid #e5e5e5;
-background-color: #f7f7f7;
-flex-shrink: 0;
+/* ---------- 2. 链接 ---------- */
+
+a {
+  text-decoration: none;
 }
 
-#content_container {
-display: flex;
-flex-direction: column;
-flex: 1;
-min-height: 100vh;
-}
-
-#main-frame {
-flex: 1;
-border: none;
-width: 100%;
-}
-
-#email-link {
-text-decoration: none;
-}
-
-#email-link:hover {
-text-decoration: underline;
-}
-
-#github-link {
-text-decoration: none;
-}
-
-#github-link:hover {
-text-decoration: underline;
+a:hover {
+  color: #aa0707;
 }
 
 .post-link {
-text-decoration: none;
+  text-decoration: none;
 }
+
 .post-link:hover {
-color: #aa0707;
+  color: #aa0707;
 }
 
 .post-title {
-text-decoration: none;
-font-weight: 700;
+  text-decoration: none;
+  font-weight: 700;
 }
+
 .post-title:hover {
-color: #aa0707;
+  color: #aa0707;
 }
+
+#email-link,
+#github-link {
+  text-decoration: none;
+}
+
+#email-link:hover,
+#github-link:hover {
+  text-decoration: underline;
+}
+
+/* ---------- 3. 分割线 ---------- */
+
+/* 全局 *{} 没有再重置 border，这里必须把 <hr> 的线显式画出来。
+   注意 width 必须显式写：浏览器对 <hr> 有一条特殊宽度算法，
+   一旦它的默认 border 被清掉，就会算出 width:0（线就整条消失了）。 */
+hr {
+  width: 100%;
+  height: 0;
+  border: none;
+  border-top: 1px solid #e5e5e5;
+  background: none;
+}
+
+/* ---------- 4. 文章正文里 pandoc 生成的东西 ---------- */
+
+blockquote {
+  color: #777777;
+  border-left: 5px solid #efefef;
+  padding-left: 20px; /* border 和文字之间的空隙 */
+}
+
+blockquote * {
+  color: #777777;
+}
+
+code {
+  background-color: #efefef;
+  padding: 2px;
+  border-radius: 2px;
+}
+
+/* ---------- 5. 通用页脚（about / Recent / 文章） ---------- */
 
 footer {
-display: flex;
-flex-direction: column;
-padding: 23px 150px;
-flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 23px 150px;
+  flex-shrink: 0;
 }
 
+/* 页脚里的元素一律不留默认内外边距，间距由各页自己用行内 style 精确控制 */
+footer * {
+  padding: 0;
+  margin: 0;
+}
+
+/* ============================================================
+   6. 带侧栏的外壳布局（index.html 专用）
+   用 html[data-layout="sidebar"] 门控：
+   没有这个属性的页面完全不受影响。
+   ============================================================ */
+
+html[data-layout="sidebar"] body {
+  flex-direction: row;
+}
+
+#top {
+  display: flex;
+  flex-direction: column;
+  padding: 23px 23px;
+  width: 250px;
+  min-height: 100vh;
+  border-right: 1px solid #e5e5e5;
+  background-color: #f7f7f7;
+  flex-shrink: 0;
+}
+
+/* 侧栏内部：原本是 index.html 里一堆行内 style，现在收编 */
+
+.site {
+  display: flex;
+  flex-direction: column;
+  align-self: flex-start;
+}
+
+.site-logo {
+  align-self: flex-start;
+}
+
+.site-logo img {
+  width: 250px;
+  margin-left: -29px;
+}
+
+.site-tagline {
+  align-self: flex-start;
+  margin: 0; /* h6 自带 margin，这里显式归零，避免依赖浏览器默认值 */
+}
+
+.site-profile {
+  margin-top: auto;
+  margin-bottom: -20px;
+}
+
+.site-profile-inner {
+  margin-top: 80px;
+}
+
+.site-name {
+  font-weight: bold;
+}
+
+.site-username {
+  font-size: 1.2em;
+  font-style: normal;
+  font-weight: 300;
+  color: #656d76;
+  line-height: 24px;
+}
+
+.site-intro {
+  margin-top: 16px;
+  line-height: 1.2;
+}
+
+.site-links {
+  list-style: none;
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 23px;
+  /* 归零：<ul> 浏览器默认有 40px 左缩进，会把这三行推到 x=63，
+     而 #top 里其他所有内容（logo / BUG! SQUASH! / 姓名 / 简介）都在 x=23。
+     缩进一归零，三行就和上面全部左对齐了 */
+  padding-left: 0;
+}
+
+.site-links li {
+  /* 图标和文字：gap 6px + 垂直居中，跟你原文件写的一字不差。
+     用 grid 只是把「图标列 16px」钉死，让三行的文字左边缘严格对齐。
+     注意这里没有给文字列加 min-width: 0 / overflow-wrap —— 那两条会让
+     github 地址从「一行溢出」变成「折成两行」，不是你要的效果 */
+  display: grid;
+  grid-template-columns: 16px auto;
+  align-items: center;
+  gap: 6px;
+}
+
+.site-links svg {
+  flex-shrink: 0;
+}
+
+.site-links p {
+  margin: 0; /* 行内 style 没写，靠这里统一 */
+  /* 这两条显式钉住：旧版靠继承链拿到，抽出样式表后继承链变了，
+     "ZJUT" 的字重会跟着 h3 跑偏 */
+  font-weight: 400;
+  font-size: 14px;
+}
+
+.site-links a,
+.site-links .link-label,
+.site-links .link-text {
+  font-size: 14px;
+  /* 不加 overflow-wrap / min-width：github 那串保持一行，
+     和原版行为一致 */
+  white-space: nowrap;
+}
+
+.site-links .link-label {
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+/* 右侧内容区（iframe 时代用，改成真链接后可以整体删掉） */
+
+#content_container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 100vh;
+}
+
+#main-frame {
+  flex: 1;
+  border: none;
+  width: 100%;
+}

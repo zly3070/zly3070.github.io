@@ -4,30 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>最近</title>
-    <!-- <link rel="stylesheet" href="../style.css" /> -->
+    <link rel="stylesheet" href="style.css" />
     <!-- 使用 MathJax 渲染公式 -->
     <script
       src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
       async
     ></script>
     <style>
-      * {
-        box-sizing: border-box;
-        font-family:
-          "Roboto Condensed",
-          -apple-system,
-          "Microsoft YaHei",
-          "Arial",
-          system-ui;
-        line-height: 1.5;
-        color: #333;
-        /* font-style: normal; */
-        text-autospace: normal;
-      }
+      /* Recent.html 自己的布局。
+         基础样式（reset / 字体 / 链接 / blockquote / code / 页脚）统一在 style.css 里，
+         以前这里抄了一整份，改一处忘两处，现在不抄了。 */
 
       body {
-        margin: 0;
-        padding: 0;
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -40,56 +28,10 @@
         flex: 1;
       }
 
-      footer {
-        margin: 0;
-        padding: 0;
-        display: flex;
-        flex-direction: column;
-        padding: 23px 150px;
-        flex-shrink: 0;
-      }
-
+      /* 页脚里的元素不留默认边距，间距由页内行内 style 控制 */
       footer * {
         padding: 0;
         margin: 0;
-      }
-
-      .post-link {
-        text-decoration: none;
-      }
-      .post-link:hover {
-        color: #aa0707;
-      }
-
-      .post-title {
-        text-decoration: none;
-        font-weight: 700;
-      }
-      .post-title:hover {
-        color: #aa0707;
-      }
-
-      /* 继承的优先级是最低的 */
-      blockquote {
-        color: #777777;
-        border-left: 5px solid #efefef;
-        padding-left: 20px; /* border 和文字之间的空隙 */
-      }
-      blockquote * {
-        color: #777777;
-      }
-
-      code {
-        background-color: #efefef;
-        padding: 2px;
-        border-radius: 2px;
-      }
-
-      a {
-        text-decoration: none;
-      }
-      a:hover {
-        color: #aa0707;
       }
     </style>
   </head>
