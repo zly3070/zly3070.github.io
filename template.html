@@ -1,9 +1,13 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-layout="sidebar">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>$title$</title>
+    <title>$title$ - Lyon Dev</title>
+    <!-- canonical 由 scripts/inject_layout.py 按真实文件名填入（含百分号编码） -->
+    <link rel="canonical" href="" />
+    <!-- 描述也由注入器按文章逐篇补上 -->
+    <meta name="description" content="" />
     <link rel="stylesheet" href="../style.css" />
     <!-- 使用 MathJax 渲染公式 -->
     <script
@@ -11,7 +15,8 @@
       async
     ></script>
     <style>
-      /* 文章页模板自己的布局（生成出来的文章在 somePosts/ 下，所以上面是 ../style.css）。
+      /* 文章页模板自己的布局。
+         生成出来的文章在 posts/ 目录下，所以上面引用 ../style.css。
          基础样式统一在 style.css 里，改样式只改那一个文件，不用重新生成文章。 */
 
       body {
@@ -33,14 +38,25 @@
         margin: 0;
       }
     </style>
+      <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>$title$</title>
+    <script
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
+      async
+    ></script>
+  
   </head>
+
   <body>
+    <!-- LAYOUT_START -->
+    <!-- CONTAINER_START -->
     <main id="main">
       <h1 style="margin: 0px">
         <a
-          href="../home.html"
+          href="../index.html"
           class="post-link"
-          target="main-frame"
+         
           style="text-decoration: none; margin: 0px"
           >~/</a
         >
@@ -48,71 +64,8 @@
       <hr width="100%" style="margin-top: 0px; margin-bottom: 40px" />
       $body$
     </main>
-    <hr style="width: calc(100% - 300px); margin: auto" />
-    <footer>
-      <div style="display: flex; flex-direction: column">
-        <div style="display: flex">
-          <div
-            style="display: flex; align-self: flex-start; gap: 70px; flex: 1"
-          >
-            <div style="display: flex; flex-direction: column">
-              <p style="font-size: 20px; margin-bottom: 16px; font-weight: 800">
-                友链
-              </p>
-              <p>
-                <a href="https://tzblog.tech" target="_blank" class="post-link"
-                  >小周的笔记</a
-                >
-              </p>
-              <p>
-                <a
-                  href="https://homura.great-site.net/blog/?i=1"
-                  target="_blank"
-                  class="post-link"
-                  >lhc's ideas</a
-                >
-              </p>
-              <p>Q</p>
-              <p>
-                <a href="https://naoh3326.xyz" target="_blank" class="post-link"
-                  >NaOh</a
-                >
-              </p>
-            </div>
-            <div style="display: flex; flex-direction: column">
-              <p style="margin-bottom: 16px; font-size: 20px; font-weight: 800">
-                评论
-              </p>
-              <p style="color: #acb02b">Coming soon</p>
-            </div>
-          </div>
-
-          <div style="margin-left: auto">
-            <img
-              src="../images/footer.webp"
-              alt="footer-links"
-              style="
-                width: 300px;
-                margin-left: auto;
-                display: block;
-                margin-top: -7px;
-              "
-            />
-          </div>
-        </div>
-        <div style="display: flex; justify-content: center">
-          <p
-            style="
-              color: #555555;
-              margin-top: 14px;
-              margin-bottom: -7px;
-              font-family: Source Sans Pro;
-            "
-          >
-            &copy; 2026 Lyon Chow. All rights reserved.
-          </p>
-        </div>
-      </div>
-    </footer>
+  
+    <!-- CONTAINER_END -->
+    <!-- LAYOUT_END -->
   </body>
 </html>

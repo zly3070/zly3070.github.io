@@ -221,7 +221,7 @@ _**接下来讲核心公式，集中注意力！**_
 
 **注意力函数可以描述为：将一个查询（Query） 和一组键-值对（Key-Value pairs） 映射到一个输出（Output），其中查询、键、值和输出都是向量。**
 
-<img src="..\images\ScaledDot-ProductAttention&Multi-HeadAttention.webp" alt="ScaledDot-ProductAttention&Multi-HeadAttention" style="zoom:80%;" />
+<img src="../images/ScaledDot-ProductAttention&Multi-HeadAttention.webp" alt="ScaledDot-ProductAttention&Multi-HeadAttention" style="zoom:80%;" />
 
 **输出被计算为所有 Value 的加权和，其中分配给每个 Value 的权重，是由 Query 与对应的 Key 的兼容性函数（compatibility function） 计算得到的。**
 
@@ -237,7 +237,7 @@ _接下来看具体是怎么进行吸收的。_
 
 **在实际操作中，我们同时计算一组 Query，把它们打包成矩阵 Q。Keys 和 Values 也分别打包成矩阵 K 和 V。我们计算输出矩阵为：**
 
-<img src="..\images\Attention(Q,K,V).webp" alt="Attention(Q,K,V)" style="zoom:80%;" />[^3]
+<img src="../images/Attention(Q,K,V).webp" alt="Attention(Q,K,V)" style="zoom:80%;" />[^3]
 
 _我们需要知道训练好的注意力模块，能计算出给初始的泛型嵌入加个什么位移，才能把它移动到上下文对应的具体方向上。_
 
@@ -289,7 +289,7 @@ _以上这些就是**单头**注意力机制，这个过程由三种填满了可
 
 **这些输出被拼接在一起，然后再做一次投影，得到最终的输出值，如下图所示。**
 
-><img src="..\images\Multi-HeadAttention.webp" alt="Multi-HeadAttention" style="zoom:80%;" />
+><img src="../images/Multi-HeadAttention.webp" alt="Multi-HeadAttention" style="zoom:80%;" />
 
 _从维度角度去理解实际上这样的：GPT-3中有96个注意力头，输入序列经过Embedding是n*12288维的矩阵，每行一个token；对于第i个头，都拥有可以将嵌入向量投影到128维的Q、K、V矩阵；接着每个头独自计算注意力，此时每个头的输出仍然在128的低维空间；为了还原到12288维的高维语义向量，将96个头的输出直接沿着列方向**拼接**（Concat），恢复成12288维；最后，进行一次投影，乘12288维的方阵W\_O矩阵，融合所有头的信息，让模型可以跨头地组合模型。_
 
@@ -430,7 +430,7 @@ _分个P，前方的道路之后再来探索吧_
 
 给各位看下现在的桌面环境是什么样子的，什么你说那超级无敌笨重烧柴油潮汐声风扇笔记本怎么办，放着舒缓音乐当背景板罢:D
 
-<img src="..\images\nightworkbk.webp" alt="nightworkbk" style="zoom:60%;" />
+<img src="../images/nightworkbk.webp" alt="nightworkbk" style="zoom:60%;" />
 
 关于这台华硕天选6Pro真是有很多可以吐槽的点，早知道使用场景的话，当时肯定选择更实惠的air了。现在可能也只有放宿舍里当作ssh服务器会算是起到了一点用处，一个字给到拉完了:(
 

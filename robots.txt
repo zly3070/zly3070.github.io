@@ -1,0 +1,10 @@
+# 全部允许抓取
+User-agent: *
+Allow: /
+
+# 草稿和模板不是页面，别浪费抓取配额
+Disallow: /template.html
+Disallow: /废稿.html
+Disallow: /_partials/
+
+Sitemap: https://zly3070.github.io/sitemap.xml

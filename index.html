@@ -5,99 +5,372 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="波球存放思考和摄影的地方" />
     <title>Lyon Dev</title>
+    <link rel="canonical" href="https://zly3070.github.io/index.html" />
     <link rel="icon" type="image/webp" href="images/putty.webp" />
     <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
-    <header id="top">
-      <div class="site-logo">
-        <img src="images/header_hello_cut.webp" alt="header-hello" />
-      </div>
-      <div class="site-tagline">
-        <h6>BUG! SQUASH!</h6>
-      </div>
+    <!-- LAYOUT_START -->
+<!-- ============================================================
+     共享骨架：左侧栏 + 页脚
+     由 scripts/inject_layout.py 注入到每个页面里。
+     只在仓库里维护这一份，各页面不再各自复制。
 
-      <div class="site-profile">
-        <div class="site-profile-inner">
-          <h2 class="site-name">Linyao Zhou</h2>
-          <h3 class="site-username">zly3070</h3>
+     占位符（下面正文里用双花括号包住 BASE 表示）：
+       BASE     到站点根目录的相对前缀。根目录的页面是 "./"，
+                posts/ 里的文章页是 "../"
+     ============================================================ -->
 
-          <p class="site-intro">
-            Major in SE, worry about the future 很想很想拍好看照片 (>_<)ゞ
-            <br />
-            <a href="about.html" class="post-link" target="main-frame"
-              >More about me.</a
-            >
-          </p>
+<!-- ⚠ 结构约定（很重要，别再改乱）：
+         body 是 flex 行，只有两个子元素：
+           1) <header id="top">       左侧栏，固定 250px，不参与滚动
+           2) <div id="main_container"> 右侧主容器，唯一的滚动区
+         footer 必须放在 main_container **里面**的最下面 ——
+         放成 body 的第三个子元素会被当成横排的第三列排到右边去（踩过）。 -->
+<header id="top">
+  <div class="site-logo">
+    <img src="./images/header_hello_cut.webp" alt="header-hello" />
+  </div>
+  <div class="site-tagline">
+    <h6>BUG! SQUASH!</h6>
+  </div>
+
+  <div class="site-profile">
+    <div class="site-profile-inner">
+      <h2 class="site-name">Linyao Zhou</h2>
+      <h3 class="site-username">zly3070</h3>
+
+      <p class="site-intro">
+        Major in SE, worry about the future 很想很想拍好看照片 (>_<)ゞ
+        <br />
+        <a href="./about.html" class="post-link">More about me.</a>
+      </p>
+    </div>
+
+    <ul class="site-links">
+      <li>
+        <svg
+          viewBox="0 0 16 16"
+          version="1.1"
+          width="16"
+          height="16"
+          aria-hidden="true"
+        >
+          <path
+            d="M1.75 16A1.75 1.75 0 0 1 0 14.25V1.75C0 .784.784 0 1.75 0h8.5C11.216 0 12 .784 12 1.75v12.5c0 .085-.006.168-.018.25h2.268a.25.25 0 0 0 .25-.25V8.285a.25.25 0 0 0-.111-.208l-1.055-.703a.749.749 0 1 1 .832-1.248l1.055.703c.487.325.779.871.779 1.456v5.965A1.75 1.75 0 0 1 14.25 16h-3.5a.766.766 0 0 1-.197-.026c-.099.017-.2.026-.303.026h-3a.75.75 0 0 1-.75-.75V14h-1v1.25a.75.75 0 0 1-.75.75Zm-.25-1.75c0 .138.112.25.25.25H4v-1.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 .75.75v1.25h2.25a.25.25 0 0 0 .25-.25V1.75a.25.25 0 0 0-.25-.25h-8.5a.25.25 0 0 0-.25.25ZM3.75 6h.5a.75.75 0 0 1 0 1.5h-.5a.75.75 0 0 1 0-1.5ZM3 3.75A.75.75 0 0 1 3.75 3h.5a.75.75 0 0 1 0 1.5h-.5A.75.75 0 0 1 3 3.75Zm4 3A.75.75 0 0 1 7.75 6h.5a.75.75 0 0 1 0 1.5h-.5A.75.75 0 0 1 7 6.75ZM7.75 3h.5a.75.75 0 0 1 0 1.5h-.5A.75.75 0 0 1 7.75 3ZM3 9.75A.75.75 0 0 1 3.75 9h.5a.75.75 0 0 1 0 1.5h-.5A.75.75 0 0 1 3 9.75ZM7.75 9h.5a.75.75 0 0 1 0 1.5h-.5A.75.75 0 0 1 7.75 9Z"
+          ></path>
+        </svg>
+        <p class="link-label">zjut</p>
+      </li>
+      <li>
+        <svg
+          viewBox="0 0 16 16"
+          version="1.1"
+          width="16"
+          height="16"
+          aria-hidden="true"
+        >
+          <path
+            d="M1.75 2h12.5c.966 0 1.75.784 1.75 1.75v8.5A1.75 1.75 0 0 1 14.25 14H1.75A1.75 1.75 0 0 1 0 12.25v-8.5C0 2.784.784 2 1.75 2ZM1.5 12.251c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25V5.809L8.38 9.397a.75.75 0 0 1-.76 0L1.5 5.809v6.442Zm13-8.181v-.32a.25.25 0 0 0-.25-.25H1.75a.25.25 0 0 0-.25.25v.32L8 7.88Z"
+          ></path>
+        </svg>
+        <a
+          href="mailto:zly3070@qq.com"
+          id="email-link"
+          class="link-text"
+          target="_blank"
+        >
+          zly3070@qq.com
+        </a>
+      </li>
+      <li>
+        <svg
+          height="16"
+          viewBox="0 0 16 16"
+          version="1.1"
+          width="16"
+          aria-hidden="true"
+        >
+          <path
+            d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"
+          ></path>
+        </svg>
+        <a
+          href="https://github.com/zly3070"
+          id="github-link"
+          class="link-text"
+          target="_blank"
+          >github.com/zly3070</a
+        >
+      </li>
+    </ul>
+  </div>
+</header>
+
+<!-- 右侧内容区。各页面的正文由注入器放进这里面。 -->
+<!-- 右侧主容器：这是页面上【唯一】会滚动的区域。
+         文章过长时出现滚动条，滚动的也只是它；侧栏保持不动。 -->
+<div id="main_container">
+  <main id="content_container">
+    <!-- CONTAINER_START -->
+    <!-- 首页正文（由 home.html 抽出）。
+         由 scripts/inject_layout.py 注入到 index.html 的 #content_container 里。
+         ./ 是到站点根目录的相对前缀。 -->
+
+    <main id="main">
+          <div
+            style="display: flex; align-items: center; gap: 8px; margin-top: -25px"
+          >
+            <span style="color: #898e96">
+              我使用了纯html和css搭建了这个网页，目前仅保证Win端访问体验，Linux和Android端适配将不日上线。<br />
+              您可以在浏览器里按F12打开开发者工具，查看网页的源代码，或者在github上查看我的代码仓库，欢迎交流和指正。
+              <br />
+              <br />
+              <span style="font-weight: 600">关于友链：</span
+              >建站伊始，评论功能尚未完善，您可以通过Issues给我发送您的个人网站网址和希望呈现的名字。<br />
+              格式参照 &lt;a href="WEBURL"&gt;WEBNAME&lt;/a&gt;
+            </span>
+          </div>
+
+          <hr style="margin-top: 20px" />
+          <div>
+            <div style="margin-top: 35px">
+              <h1 style="font-weight: 800">
+                最近
+                <a href="./Recent.html" id="" class="post-link">
+                  ./</a
+                >
+              </h1>
+
+              <div
+                id="recent-grid"
+                style="
+                  display: grid;
+                  grid-template-columns: 1fr 1fr;
+                  gap: 30px;
+                  margin-top: 20px;
+                "
+              ></div>
+              <!-- JS填充内容 -->
+            </div>
+
+            <div style="margin-top: 80px">
+              <h1 style="font-weight: 800">
+                项目 <a href="" class="post-link">./</a>
+              </h1>
+              <div
+                style="
+                  display: grid;
+                  grid-template-columns: 1fr 1fr;
+                  gap: 30px;
+                  margin-top: 20px;
+                "
+              >
+                <!-- 手动添加的项目，每个都是一个 cell，复制这个块即可 -->
+                <div style="display: flex; flex-direction: column">
+                  <span
+                    style="
+                      font-family: Consolas;
+                      font-size: 14px;
+                      color: #666666;
+                      white-space: nowrap;
+                    "
+                    >02 Jul 2026&nbsp;</span
+                  >
+                  <a
+                    href="https://github.com/zly3070/cpp_homeworks/tree/main/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E8%AF%BE%E5%A4%A7%E4%BD%9C%E4%B8%9A/AlumniSystem"
+                    style="font-size: 20px; width: fit-content"
+                    class="post-title"
+                    target="_blank"
+                  >
+                    校友录系统
+                  </a>
+                  <p
+                    style="
+                      font-size: 16px;
+                      margin: 20px 0 0 0;
+                      display: -webkit-box;
+                      -webkit-line-clamp: 3;
+                      -webkit-box-orient: vertical;
+                      overflow: hidden;
+                    "
+                  >
+                    基于 C++ 和 FTXUI
+                    库开发的校友录管理系统，提供图形化终端界面（TUI），支持校友信息的增删改查和持久化存储。
+                  </p>
+                </div>
+                <!-- 在这行下面复制上面的 cell 继续添加新项目 -->
+              </div>
+            </div>
+          </div>
+        </main>
+
+    <script>
+    (function () {
+            // 读取 post_list.json（python 生成的静态数据）
+            fetch("post_list.json")
+              .then(function (res) {
+                if (!res.ok)
+                  throw new Error("post_list.json 加载失败: " + res.status);
+                return res.json();
+              })
+              .then(function (posts) {
+                renderRecentGrid(posts);
+              })
+              .catch(function (err) {
+                console.error(err);
+              });
+
+            function renderRecentGrid(posts) {
+              var grid = document.getElementById("recent-grid");
+              if (!grid) return;
+
+              // 展示最多 5 篇；若文章总数 > 5，则在第 6 格（第 3 行第 2 个）显示 "..." 省略号
+              var maxItems = 5;
+              var shown = posts.slice(0, maxItems);
+              var hasMore = posts.length > maxItems;
+
+              var html = "";
+
+              shown.forEach(function (post) {
+                // 点击跳转的只有标题（用 post-title，hover 变红）
+                var titleLink =
+                  '<a href="./posts/' +
+                  encodeURI(post.filename) +
+                  '" style="font-size:20px;" class="post-title">' +
+                  escapeHtml(post.title) +
+                  "</a>";
+
+                var desc = post.description
+                  ? '<p style="font-size:16px; margin:20px 0 0 0; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">' +
+                    escapeHtml(post.description) +
+                    "</p>"
+                  : "";
+
+                html +=
+                  '<div style="display:flex; flex-direction:column;">' +
+                  '<span style="font-family:Consolas; font-size:14px; color:#666666; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' +
+                  formatDate(post.date) +
+                  "&nbsp" +
+                  "</span>" +
+                  '<span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' +
+                  titleLink +
+                  "</span>" +
+                  desc +
+                  "</div>";
+              });
+
+              if (hasMore) {
+                html +=
+                  '<p style="display:flex; align-items:center; font-size:22px; color:#333333;" >' +
+                  "..." +
+                  "</p>";
+              }
+
+              grid.innerHTML = html;
+            }
+
+            // 网络防御：转义 HTML
+            function escapeHtml(str) {
+              var div = document.createElement("div");
+              div.textContent = String(str == null ? "" : str);
+              return div.innerHTML;
+            }
+
+            // 将 "2026-03-26" 格式化为 "26 Mar 2026"
+            function formatDate(dateStr) {
+              if (!dateStr) return "";
+              var parts = dateStr.split("-");
+              if (parts.length !== 3) return dateStr;
+              var months = [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec",
+              ];
+              var m = parseInt(parts[1], 10) - 1;
+              var monthName = months[m] || parts[1];
+              return parseInt(parts[2], 10) + " " + monthName + " " + parts[0];
+            }
+          })();
+    </script>
+    <!-- CONTAINER_END -->
+  </main>
+
+  <footer id="site-footer">
+    <div style="display: flex; flex-direction: column">
+      <div style="display: flex">
+        <div style="display: flex; align-self: flex-start; gap: 70px; flex: 1">
+          <div style="display: flex; flex-direction: column">
+            <p style="font-size: 20px; margin-bottom: 16px; font-weight: 800">
+              友链
+            </p>
+            <p>
+              <a href="https://tzblog.tech" target="_blank" class="post-link"
+                >小周的笔记</a
+              >
+            </p>
+            <p>
+              <a
+                href="https://homura.great-site.net/blog/?i=1"
+                target="_blank"
+                class="post-link"
+                >lhc's ideas</a
+              >
+            </p>
+            <p>Q</p>
+            <p>
+              <a href="https://naoh3326.xyz" target="_blank" class="post-link"
+                >NaOh</a
+              >
+            </p>
+          </div>
+          <div style="display: flex; flex-direction: column">
+            <p style="margin-bottom: 16px; font-size: 20px; font-weight: 800">
+              评论
+            </p>
+            <p style="color: #acb02b">Coming soon</p>
+          </div>
         </div>
 
-        <ul class="site-links">
-          <li>
-            <svg
-              viewBox="0 0 16 16"
-              version="1.1"
-              width="16"
-              height="16"
-              aria-hidden="true"
-            >
-              <path
-                d="M1.75 16A1.75 1.75 0 0 1 0 14.25V1.75C0 .784.784 0 1.75 0h8.5C11.216 0 12 .784 12 1.75v12.5c0 .085-.006.168-.018.25h2.268a.25.25 0 0 0 .25-.25V8.285a.25.25 0 0 0-.111-.208l-1.055-.703a.749.749 0 1 1 .832-1.248l1.055.703c.487.325.779.871.779 1.456v5.965A1.75 1.75 0 0 1 14.25 16h-3.5a.766.766 0 0 1-.197-.026c-.099.017-.2.026-.303.026h-3a.75.75 0 0 1-.75-.75V14h-1v1.25a.75.75 0 0 1-.75.75Zm-.25-1.75c0 .138.112.25.25.25H4v-1.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 .75.75v1.25h2.25a.25.25 0 0 0 .25-.25V1.75a.25.25 0 0 0-.25-.25h-8.5a.25.25 0 0 0-.25.25ZM3.75 6h.5a.75.75 0 0 1 0 1.5h-.5a.75.75 0 0 1 0-1.5ZM3 3.75A.75.75 0 0 1 3.75 3h.5a.75.75 0 0 1 0 1.5h-.5A.75.75 0 0 1 3 3.75Zm4 3A.75.75 0 0 1 7.75 6h.5a.75.75 0 0 1 0 1.5h-.5A.75.75 0 0 1 7 6.75ZM7.75 3h.5a.75.75 0 0 1 0 1.5h-.5a.75.75 0 0 1 0-1.5ZM3 9.75A.75.75 0 0 1 3.75 9h.5a.75.75 0 0 1 0 1.5h-.5A.75.75 0 0 1 3 9.75ZM7.75 9h.5a.75.75 0 0 1 0 1.5h-.5a.75.75 0 0 1 0-1.5Z"
-              ></path>
-            </svg>
-            <p class="link-label">zjut</p>
-          </li>
-          <li>
-            <svg
-              viewBox="0 0 16 16"
-              version="1.1"
-              width="16"
-              height="16"
-              aria-hidden="true"
-            >
-              <path
-                d="M1.75 2h12.5c.966 0 1.75.784 1.75 1.75v8.5A1.75 1.75 0 0 1 14.25 14H1.75A1.75 1.75 0 0 1 0 12.25v-8.5C0 2.784.784 2 1.75 2ZM1.5 12.251c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25V5.809L8.38 9.397a.75.75 0 0 1-.76 0L1.5 5.809v6.442Zm13-8.181v-.32a.25.25 0 0 0-.25-.25H1.75a.25.25 0 0 0-.25.25v.32L8 7.88Z"
-              ></path>
-            </svg>
-            <a
-              href="mailto:zly3070@qq.com"
-              id="email-link"
-              class="link-text"
-              target="_blank"
-            >
-              zly3070@qq.com
-            </a>
-          </li>
-          <li>
-            <svg
-              height="16"
-              viewBox="0 0 16 16"
-              version="1.1"
-              width="16"
-              aria-hidden="true"
-            >
-              <path
-                d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"
-              ></path>
-            </svg>
-            <a
-              href="https://github.com/zly3070"
-              id="github-link"
-              class="link-text"
-              target="_blank"
-              >https://github.com/zly3070</a
-            >
-          </li>
-        </ul>
+        <div style="margin-left: auto">
+          <img
+            src="./images/footer.webp"
+            alt="footer-links"
+            style="
+              width: 300px;
+              margin-left: auto;
+              display: block;
+              margin-top: -7px;
+            "
+          />
+        </div>
       </div>
-    </header>
-    <div id="content_container">
-      <iframe
-        loading="lazy"
-        src="home.html"
-        id="main-frame"
-        name="main-frame"
-      ></iframe>
+      <div style="display: flex; justify-content: center">
+        <p
+          style="
+            color: #555555;
+            margin-top: 14px;
+            margin-bottom: -7px;
+            font-family: Source Sans Pro;
+          "
+        >
+          &copy; 2026 Lyon Chow. All rights reserved.
+        </p>
+      </div>
     </div>
+  </footer>
+</div>
+<!-- /#main_container -->
+    <!-- LAYOUT_END -->
   </body>
 </html>

@@ -3,19 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>最近</title>
-    <meta name="description" content="所有文章列表：学习笔记、论文精读、技术思考。" />
-    <link rel="canonical" href="https://zly3070.github.io/Recent.html" />
-    <link rel="stylesheet" href="style.css" />
+    <title>想学计算机图形学 - Lyon Dev</title>
+    <!-- canonical 由 scripts/inject_layout.py 按真实文件名填入（含百分号编码） -->
+    <link rel="canonical" href="https://zly3070.github.io/posts/2026-03-26-%E6%83%B3%E5%AD%A6%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6.html" />
+    <!-- 描述也由注入器按文章逐篇补上 -->
+    <meta name="description" content="从「怎么把网站弄好看」的折腾出发，决定开始学计算机图形学，并整理了 games101 → OpenGL → Vulkan → 渲染技术的学习路径。" />
+    <link rel="stylesheet" href="../style.css" />
     <!-- 使用 MathJax 渲染公式 -->
     <script
       src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
       async
     ></script>
     <style>
-      /* Recent.html 自己的布局。
-         基础样式（reset / 字体 / 链接 / blockquote / code / 页脚）统一在 style.css 里，
-         以前这里抄了一整份，改一处忘两处，现在不抄了。 */
+      /* 文章页模板自己的布局。
+         生成出来的文章在 posts/ 目录下，所以上面引用 ../style.css。
+         基础样式统一在 style.css 里，改样式只改那一个文件，不用重新生成文章。 */
 
       body {
         display: flex;
@@ -38,7 +40,7 @@
     </style>
       <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>最近</title>
+    <title>想学计算机图形学</title>
     <script
       src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
       async
@@ -66,7 +68,7 @@
          放成 body 的第三个子元素会被当成横排的第三列排到右边去（踩过）。 -->
 <header id="top">
   <div class="site-logo">
-    <img src="./images/header_hello_cut.webp" alt="header-hello" />
+    <img src="../images/header_hello_cut.webp" alt="header-hello" />
   </div>
   <div class="site-tagline">
     <h6>BUG! SQUASH!</h6>
@@ -80,7 +82,7 @@
       <p class="site-intro">
         Major in SE, worry about the future 很想很想拍好看照片 (>_<)ゞ
         <br />
-        <a href="./about.html" class="post-link">More about me.</a>
+        <a href="../about.html" class="post-link">More about me.</a>
       </p>
     </div>
 
@@ -151,116 +153,36 @@
   <main id="content_container">
     <!-- CONTAINER_START -->
     <main id="main">
-      <h1 style="margin: 0px; white-space: nowrap">
+      <h1 style="margin: 0px">
         <a
-          href="home.html"
+          href="../index.html"
           class="post-link"
 
           style="text-decoration: none; margin: 0px"
           >~/</a
         >
-        最近
       </h1>
       <hr width="100%" style="margin-top: 0px; margin-bottom: 40px" />
-
-      <div
-        id="post-list"
-        style="display: flex; flex-direction: column; gap: 20px"
-      ></div>
-      <!-- 文章列表由 JS 填充 -->
+      <h3
+      id="最近在思考到底怎么把这个网站弄得好看">最近在思考到底怎么把这个网站弄得好看</h3>
+      <p><em>从「怎么把网站弄好看」的折腾出发，决定开始学计算机图形学，并整理了
+      games101 → OpenGL → Vulkan → 渲染技术的学习路径。</em></p>
+      <p>起先去网上看了各种怎么在github上配置网站的教程，感觉怎么说呢</p>
+      <p>还是没有戳中我的心吧。最后还是得回到http和css，可是我现在一点都不想学这俩，感觉会很繁琐。</p>
+      <p>况且我想得到的专业技能提升不是指这些方面，接着又在B站上看到了很好看的网站设计，有很棒的交互性和立体感。听了介绍是关于纯粹的计算机图形学的。心中顿时大喜，感觉会很合我的胃口，听起来略有点小众高级的样子（笑），所以我决定以后空余时间学点这个。</p>
+      <p>可能确实吧，对于美化网站帮不上什么大忙，但算是一种借口吧，给一个自己往周边探索的借口。
+      数学可能也是，会很难的估计。听说会是数学专业学的课程，也想借着这个机会加深自己对相关数学知识的理解。</p>
+      <h3 id="学习路径">学习路径：</h3>
+      <p>1、 图形学基础 -&gt; games101</p>
+      <p>2、图形学 API -&gt; 先学 opengl，推荐《learn opengl》</p>
+      <p>3、现代图形 API -&gt; vulkan 或者 metal，推荐 vulkan
+      tutorial</p>
+      <p>4、工程能力，没事多做算法题（不用太难），学习各种开源项目</p>
+      <p>5、对现代 API
+      进行适度封装（先参考别人的做法），学习渲染技术（比如games202）并自己实现，推荐
+      RTR4 ，不要太早看。shader 学习，推荐 hlsl
+      ，推荐《unityshader入门精要》</p>
     </main>
-
-    <script>
-      (function () {
-        // 读取 post_list.json（python 生成的静态数据）
-        fetch("post_list.json")
-          .then(function (res) {
-            if (!res.ok)
-              throw new Error("post_list.json 加载失败: " + res.status);
-            return res.json();
-          })
-          .then(function (posts) {
-            renderPostList(posts);
-          })
-          .catch(function (err) {
-            console.error(err);
-          });
-
-        function renderPostList(posts) {
-          var container = document.getElementById("post-list");
-          if (!container) return;
-
-          if (!posts || posts.length === 0) {
-            container.innerHTML = "<p>还没有文章。</p>";
-            return;
-          }
-
-          var html = "";
-
-          posts.forEach(function (post) {
-            var desc = post.description
-              ? '<p style="font-size:16px; margin:2px 0 0 0;">' +
-                escapeHtml(post.description) +
-                "</p>"
-              : "";
-
-            html +=
-              '<div style="display:flex;">' +
-              '<span style="font-family:Consolas; font-size:16px; color:#666666; white-space:nowrap;">' +
-              formatDate(post.date) +
-              "&nbsp" +
-              "</span>" +
-              '<div style="display:flex; flex-direction:column; gap:3px; width:400px;">' +
-              '<a href="./posts/' +
-              encodeURI(post.filename) +
-              '" style="font-size:18px; width:fit-content;" class="post-title">' +
-              escapeHtml(post.title) +
-              "</a>" +
-              desc +
-              "</div>" +
-              "</div>";
-          });
-
-          container.innerHTML = html;
-        }
-
-        // 转义 HTML，防止特殊字符破坏结构
-        function escapeHtml(str) {
-          var div = document.createElement("div");
-          div.textContent = String(str == null ? "" : str);
-          return div.innerHTML;
-        }
-
-        // 将 "2026-03-26" 格式化为 "26 Mar 2026"
-        function formatDate(dateStr) {
-          if (!dateStr) return "";
-          var parts = dateStr.split("-");
-          if (parts.length !== 3) return dateStr;
-          var months = [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Oct",
-            "Nov",
-            "Dec",
-          ];
-          var m = parseInt(parts[1], 10) - 1;
-          var monthName = months[m] || parts[1];
-          return parseInt(parts[2], 10) + " " + monthName + " " + parts[0];
-        }
-      })();
-    </script>
-
-
-
-
-
 
 
     <!-- CONTAINER_END -->
@@ -304,7 +226,7 @@
 
         <div style="margin-left: auto">
           <img
-            src="./images/footer.webp"
+            src="../images/footer.webp"
             alt="footer-links"
             style="
               width: 300px;

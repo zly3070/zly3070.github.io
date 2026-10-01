@@ -40,8 +40,13 @@ OUT_FILE = ROOT_DIR / "photos.json"
 USERNAME = "zhoulinyao"          # 你的 Unsplash 用户名
 ORDER_BY = "latest"              # latest / oldest / popular
 MAX_PER_PAGE = 30                # API 硬上限：一次最多 30 条
+DEFAULT_LIMIT = 10               # 默认只取 10 张（about.html 主角是"关于我"，不是相册）
 UTM = "utm_source=lyon_dev&utm_medium=referral"
-THUMB_W = 800                    # 让 CDN 直接给 800px 宽的图，省流量
+THUMB_W = 800                    # 墙上的缩略图宽度，省流量
+FULL_W = 1600                    # lightbox 点开看的大图宽度
+# 为什么是 1600 而不是原图：
+#   w=1920 单张约 243KB、w=2400 直接超时；1600 约 161KB，
+#   在慢网络下也能点开，细节已经足够看清
 
 
 def read_key():
@@ -102,10 +107,10 @@ def api_get(url, key):
         sys.exit(1)
 
 
-def thumb(raw, width, dpr=1):
+def thumb(raw, width, dpr=1, quality=75):
     """在 urls.raw 上追加 CDN 参数。必须保留原 url 里的 ixid（官方要求，用于统计浏览量）"""
     sep = "&" if "?" in raw else "?"
-    u = f"{raw}{sep}w={width}&q=75&fm=jpg&fit=max&auto=format"
+    u = f"{raw}{sep}w={width}&q={quality}&fm=jpg&fit=max&auto=format"
     return u + (f"&dpr={dpr}" if dpr > 1 else "")
 
 
@@ -124,9 +129,15 @@ def simplify(p):
         "alt": (p.get("alt_description") or p.get("description") or "").strip(),
         "color": p.get("color") or "#efefef",
         "blur_hash": p.get("blur_hash"),
+        # 墙上的缩略图
         "src": thumb(p["urls"]["raw"], THUMB_W),
         "src2x": thumb(p["urls"]["raw"], THUMB_W, dpr=2),
+        # 点开看的大图（lightbox 用，同样是 CDN 热链接）
+        "srcFull": thumb(p["urls"]["raw"], FULL_W, quality=80),
         "page": with_utm((p.get("links") or {}).get("html")),
+        # 官方要求：用户"取用"图片时（这里是点开看大图）要打一次这个地址，
+        # 用来给摄影师统计下载量。前端在打开灯箱时会静默 GET 它。
+        "download_location": (p.get("links") or {}).get("download_location"),
         "author": user.get("name") or user.get("username") or "",
         "author_url": with_utm((user.get("links") or {}).get("html")),
     }
@@ -134,8 +145,8 @@ def simplify(p):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--limit", type=int, default=MAX_PER_PAGE,
-                    help=f"拉几张（1~{MAX_PER_PAGE}，默认 {MAX_PER_PAGE}）")
+    ap.add_argument("--limit", type=int, default=DEFAULT_LIMIT,
+                    help=f"拉几张（1~{MAX_PER_PAGE}，默认 {DEFAULT_LIMIT}）")
     ap.add_argument("--order", default=ORDER_BY,
                     choices=["latest", "oldest", "popular"])
     args = ap.parse_args()

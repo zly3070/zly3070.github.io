@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="zh-CN" data-layout="sidebar">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>数据结构 - Lyon Dev</title>
+    <!-- canonical 由 scripts/inject_layout.py 按真实文件名填入（含百分号编码） -->
+    <link rel="canonical" href="https://zly3070.github.io/posts/2026-08-09-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.html" />
+    <!-- 描述也由注入器按文章逐篇补上 -->
+    <meta name="description" content="记录暑假以来预学习数据结构" />
+    <link rel="stylesheet" href="../style.css" />
+    <!-- 使用 MathJax 渲染公式 -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
+      async
+    ></script>
+    <style>
+      /* 文章页模板自己的布局。
+         生成出来的文章在 posts/ 目录下，所以上面引用 ../style.css。
+         基础样式统一在 style.css 里，改样式只改那一个文件，不用重新生成文章。 */
+
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      #main {
+        display: flex;
+        flex-direction: column;
+        padding: 50px 150px;
+        flex: 1;
+      }
+
+      /* 页脚里的元素不留默认边距，间距由页内行内 style 控制 */
+      footer * {
+        padding: 0;
+        margin: 0;
+      }
+    </style>
+      <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>数据结构</title>
+    <script
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
+      async
+    ></script>
+  
+  </head>
+
+  <body>
+    <!-- LAYOUT_START -->
+<!-- ============================================================
+     共享骨架：左侧栏 + 页脚
+     由 scripts/inject_layout.py 注入到每个页面里。
+     只在仓库里维护这一份，各页面不再各自复制。
+
+     占位符（下面正文里用双花括号包住 BASE 表示）：
+       BASE     到站点根目录的相对前缀。根目录的页面是 "./"，
+                posts/ 里的文章页是 "../"
+     ============================================================ -->
+
+<!-- ⚠ 结构约定（很重要，别再改乱）：
+         body 是 flex 行，只有两个子元素：
+           1) <header id="top">       左侧栏，固定 250px，不参与滚动
+           2) <div id="main_container"> 右侧主容器，唯一的滚动区
+         footer 必须放在 main_container **里面**的最下面 ——
+         放成 body 的第三个子元素会被当成横排的第三列排到右边去（踩过）。 -->
+<header id="top">
+  <div class="site-logo">
+    <img src="../images/header_hello_cut.webp" alt="header-hello" />
+  </div>
+  <div class="site-tagline">
+    <h6>BUG! SQUASH!</h6>
+  </div>
+
+  <div class="site-profile">
+    <div class="site-profile-inner">
+      <h2 class="site-name">Linyao Zhou</h2>
+      <h3 class="site-username">zly3070</h3>
+
+      <p class="site-intro">
+        Major in SE, worry about the future 很想很想拍好看照片 (>_<)ゞ
+        <br />
+        <a href="../about.html" class="post-link">More about me.</a>
+      </p>
+    </div>
+
+    <ul class="site-links">
+      <li>
+        <svg
+          viewBox="0 0 16 16"
+          version="1.1"
+          width="16"
+          height="16"
+          aria-hidden="true"
+        >
+          <path
+            d="M1.75 16A1.75 1.75 0 0 1 0 14.25V1.75C0 .784.784 0 1.75 0h8.5C11.216 0 12 .784 12 1.75v12.5c0 .085-.006.168-.018.25h2.268a.25.25 0 0 0 .25-.25V8.285a.25.25 0 0 0-.111-.208l-1.055-.703a.749.749 0 1 1 .832-1.248l1.055.703c.487.325.779.871.779 1.456v5.965A1.75 1.75 0 0 1 14.25 16h-3.5a.766.766 0 0 1-.197-.026c-.099.017-.2.026-.303.026h-3a.75.75 0 0 1-.75-.75V14h-1v1.25a.75.75 0 0 1-.75.75Zm-.25-1.75c0 .138.112.25.25.25H4v-1.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 .75.75v1.25h2.25a.25.25 0 0 0 .25-.25V1.75a.25.25 0 0 0-.25-.25h-8.5a.25.25 0 0 0-.25.25ZM3.75 6h.5a.75.75 0 0 1 0 1.5h-.5a.75.75 0 0 1 0-1.5ZM3 3.75A.75.75 0 0 1 3.75 3h.5a.75.75 0 0 1 0 1.5h-.5A.75.75 0 0 1 3 3.75Zm4 3A.75.75 0 0 1 7.75 6h.5a.75.75 0 0 1 0 1.5h-.5A.75.75 0 0 1 7 6.75ZM7.75 3h.5a.75.75 0 0 1 0 1.5h-.5A.75.75 0 0 1 7.75 3ZM3 9.75A.75.75 0 0 1 3.75 9h.5a.75.75 0 0 1 0 1.5h-.5A.75.75 0 0 1 3 9.75ZM7.75 9h.5a.75.75 0 0 1 0 1.5h-.5A.75.75 0 0 1 7.75 9Z"
+          ></path>
+        </svg>
+        <p class="link-label">zjut</p>
+      </li>
+      <li>
+        <svg
+          viewBox="0 0 16 16"
+          version="1.1"
+          width="16"
+          height="16"
+          aria-hidden="true"
+        >
+          <path
+            d="M1.75 2h12.5c.966 0 1.75.784 1.75 1.75v8.5A1.75 1.75 0 0 1 14.25 14H1.75A1.75 1.75 0 0 1 0 12.25v-8.5C0 2.784.784 2 1.75 2ZM1.5 12.251c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25V5.809L8.38 9.397a.75.75 0 0 1-.76 0L1.5 5.809v6.442Zm13-8.181v-.32a.25.25 0 0 0-.25-.25H1.75a.25.25 0 0 0-.25.25v.32L8 7.88Z"
+          ></path>
+        </svg>
+        <a
+          href="mailto:zly3070@qq.com"
+          id="email-link"
+          class="link-text"
+          target="_blank"
+        >
+          zly3070@qq.com
+        </a>
+      </li>
+      <li>
+        <svg
+          height="16"
+          viewBox="0 0 16 16"
+          version="1.1"
+          width="16"
+          aria-hidden="true"
+        >
+          <path
+            d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"
+          ></path>
+        </svg>
+        <a
+          href="https://github.com/zly3070"
+          id="github-link"
+          class="link-text"
+          target="_blank"
+          >github.com/zly3070</a
+        >
+      </li>
+    </ul>
+  </div>
+</header>
+
+<!-- 右侧内容区。各页面的正文由注入器放进这里面。 -->
+<!-- 右侧主容器：这是页面上【唯一】会滚动的区域。
+         文章过长时出现滚动条，滚动的也只是它；侧栏保持不动。 -->
+<div id="main_container">
+  <main id="content_container">
+    <!-- CONTAINER_START -->
+        <main id="main">
+          <h1 style="margin: 0px">
+            <a
+              href="../index.html"
+              class="post-link"
+
+              style="text-decoration: none; margin: 0px"
+              >~/</a
+            >
+          </h1>
+          <hr width="100%" style="margin-top: 0px; margin-bottom: 40px" />
+          <p><em>记录暑假以来预学习数据结构</em></p>
+          <h1 id="数据结构">数据结构</h1>
+          <p><strong>数据结构</strong>是一门研究<strong>非数值计算</strong>（非结构化数据）的程序设计中计算机的<strong>操作对象</strong>以及它们之间的<strong>关系</strong>和<strong>操作</strong>的学科</p>
+          <p>学习数据结构以更有效使用计算机</p>
+          <p>数据（Data）</p>
+          <p>信息的载体，对客观事物符号化的表示，能够被计算机识别、存储和加工。有数值型、非数据型。</p>
+          <p>数据元素（Data element）和数据项</p>
+          <p>数据的基本单位，通常作为整体。也称记录、结点或顶点：“图”中的一个顶点。</p>
+          <p>数据元素由若干数据项构成，是构成数据元素不可分割的最小单位。</p>
+          <p>数据 &gt; 数据元素 &gt; 数据项</p>
+          <p>数据对象（Data Object）</p>
+          <p>性质相同的数据元素的集合，<strong>是数据的一个子集</strong></p>
+          <p>整数数据对象集合N；字母字符数据对象集合C；学籍表也可看做一个数据对象</p>
+          <p>数据结构（Data Structure）</p>
+          <p>数据元素相互之间的关系称为结构。指相互之间存在一种或多种特定关系的数据元素集合。或者说，数据结构是带结构的数据元素的集合。</p>
+          <p>数据元素之间的逻辑关系称为逻辑结构。数据元素及其关系在计算机内存中的表示，称为数据的物理结构或数据的存储结构。数据的运算和实现，即对数据元素可以施加的操作以及这些操作在相应的存储结构上的实现。</p>
+          <p>逻辑结构与数据的存储无关，独立于计算机，是从具体问题抽象出来的数学模型。</p>
+          <p>物理结构（存储结构）是数据元素及其关系在计算机存储器中的结构（存储方式），是数据结构在计算机中的表示。</p>
+          <p><strong>逻辑结构与存储结构的关系</strong>：存储结构是逻辑关系的映像与元素本身的映像。</p>
+          <blockquote>
+          <p>这句话怎么理解呢？“映像”可以直接理解为“映射”或“具体实现”。更通俗地讲：映像就是把抽象的东西，变成计算机内存里实实在在能存放的东西。存储结构首先把数据元素真实地存进内存的某个单元里，这就是“元素本身的映像”;再把元素之间的关系也用内存的方式表示出来，这就是“逻辑关系的映像”。</p>
+          </blockquote>
+          <p>逻辑结构是数据结构的抽象，存储结构是数据结构的实现。两者综合起来建立了数据元素之间的数据关系。</p>
+          <p>逻辑结构的种类</p>
+          <p>划分一</p>
+          <p>（1）线性结构</p>
+          <p>有且仅有一个开始和一个终端结点，并且所有结点都最多只有一个直接前趋和一个直接后继。</p>
+          <p>e.g.线性表、栈、队列、串</p>
+          <p>（2）非线性结构</p>
+          <p>一个结点可能有多个直接前趋和直接后继</p>
+          <p>e.g.树、图（人机对弈问题、最短路径）</p>
+          <p>划分二</p>
+          <p>（1）集合结构：结构中的数据元素之间除了同属于一个集合的关系外，无任何其他关系。</p>
+          <p>（2）线性结构：结构中的数据元素之间存在一对一的线性关系。</p>
+          <p>（3）树形结构：结构中的数据元素之间存在一对多的层次关系。</p>
+          <p>（4）图状结构或网状结构：结构中的数据元素之间存在着多对多的任意关系。</p>
+          <p>存储结构的种类</p>
+          <p>四种基本的存储结构：</p>
+          <ul>
+          <li>顺序存储结构
+          <ul>
+          <li>用一组连续的存储单元<strong>依次</strong>存储数据元素，数据元素之间的逻辑关系由元素的存储位置来表示。</li>
+          <li>C语言中用数组来实现顺序存储结构</li>
+          </ul></li>
+          <li>链式存储结构
+          <ul>
+          <li><p>用一组任意的存储单元存储数据元素，数据元素之间的逻辑关系用指针来表示</p></li>
+          <li><p>C语言中用指针来实现链式存储结构</p></li>
+          </ul></li>
+          <li>索引存储结构
+          <ul>
+          <li><p>在存储结点信息的同时，还建立附加的索引表。Index</p></li>
+          <li><p>索引表中的每一项称为一个索引项</p></li>
+          <li><p>索引项的一般形式是：（关键字，地址）</p></li>
+          <li><p>关键字是能唯一标识一个结点的那些数据项</p></li>
+          <li><p>若每个结点在索引表中都有一个索引项，则该索引表称之为稠密索引（Dense
+          Index）。若一组结点在索引表中只对应一个索引项，则该索引表称之为稀疏索引（Sparse
+          Index）</p></li>
+          </ul></li>
+          <li>散列存储结构
+          <ul>
+          <li>根据结点的关键字直接计算出该结点的存储地址。</li>
+          </ul></li>
+          </ul>
+          <p>数据类型和抽象数据类型</p>
+          <p>在使用高级程序设计语言编写程序时，必须对程序中出现的每个变量、常量或表达式，明确说明它们所属的数据类型。</p>
+          <p>一些最基本的数据结构可以用数据类型来实现，如数组、字符串等；</p>
+          <p>而另一些常用的数据结构，如栈、队列、树、图等，不能直接用数据类型来表示。</p>
+          <p>高级语言中的数据类型明显或隐含地规定了在程序执行期间变量和表达所有可能的取值范围，以及在这些数值范围上所允许进行的操作。</p>
+          <p>数据类型可以约束变量或常量的取值范围和操作。</p>
+          <p>数据类型 = 值的集合 + 值集合上的一组操作</p>
+          <p>抽象数据类型（<strong>A</strong>bstract <strong>D</strong>ata
+          <strong>T</strong>ype，ADT）</p>
+          <p>指一个数学模型以及定义在此数学模型上的一组操作</p>
+          <p>不考虑计算机内的具体存储结构与运算的具体实现算法</p>
+          <p>抽象数据类型可用（D,S,P）三元组表示：</p>
+          <ul>
+          <li><p>D：数据对象</p></li>
+          <li><p>S：D上的关系集</p></li>
+          <li><p>P：对D的基本操作集合</p></li>
+          </ul>
+          <h1
+          id="在看那个视频前我简直是在瞎学">在看那个视频前我简直是在瞎学</h1>
+          <h2 id="intruduction-to-data-structure">Intruduction to Data
+          Structure</h2>
+          <p><strong>如何保存、组织和分组数据很重要。</strong></p>
+          <p>We talk about data-structures as:</p>
+          <ul>
+          <li>Mathematical/logical models or Abstract data types
+          <ul>
+          <li><p>将它们作为数学和逻辑模型的时候，我们只看它们的抽象视图，旨在从较高视角来看特定的数据结构的所有功能和操作</p></li>
+          <li><p>电视的抽象视图：可以打开关闭，可以接受卫星信号，可以播放音视频……不去理会内部电路或是制造商。因此当我们将数据结构作为数学或逻辑模型进行研究时，我们只是定义它们的抽象视图，因此定义为抽象数据类型。</p></li>
+          <li><p>List：存储一组特定数据类型的元素。能够根据他们在列表中的位置来读取里面存储的元素，而且也能够修改列表中特定位置的元素，能够存储任何数据类型的给定数量的元素。所以我们只是定义一个模型，可以用编程语言以多种方式去实现它。</p></li>
+          <li><p>高级语言都有这种称为ADT的具体实现，比如数组这样的形式。数组给我们提供上面提到的这些功能</p></li>
+          </ul></li>
+          <li>Implementation
+          <ul>
+          <li><p>实现将是一些具体类型，而不是抽象数据类型</p></li>
+          <li><p>在不同的语言中可以使用不同的implementation来达成相同的ADT</p></li>
+          <li><p>在C或Cpp中可以使用一种名为链表Link
+          List的数据结构实现列表ADT</p></li>
+          </ul></li>
+          </ul>
+          <p>给ADT一个正式的定义：作为数据和操作的定义，它没有任何实现的细节。</p>
+          <p>我们将在接下来中探讨数组、链表、栈、队列、树、图.etc</p>
+          <p>当我们研究这些数据结构时，我们将研究它们的：</p>
+          <ol type="1">
+          <li><p>Logical view</p></li>
+          <li><p>Operations</p></li>
+          <li><p>cost of oprations (most on time)</p></li>
+          <li><p>Implementation with program language</p></li>
+          </ol>
+          <h2 id="list-of-abstract-data-type">List of abstract data
+          type</h2>
+          <pre><code>List
+      - store a given number of element of a given data-type
+
+      - Write/modify修改 element at a position
+
+      - Read element at a position</code></pre>
+          <p>Are you talking about the <strong>Arrays</strong>?</p>
+          <div class="sourceCode" id="cb2"><pre
+          class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> A<span class="op">[</span><span class="dv">10</span><span class="op">];</span></span>
+    <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>A<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> <span class="dv">2</span><span class="op">;</span></span>
+    <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>print A<span class="op">[</span>i<span class="op">];</span></span></code></pre></div>
+          <p>假如我们想要用它处理更多的场景呢？</p>
+          <p>我们可以在这重定义它，我们想要一个动态长度的列表，应该根据我的需要而增长</p>
+          <pre><code>List
+    - empty list has size 0
+    - insert
+    - remove
+    - count
+    - read/modify element at a position
+    - specify data-type</code></pre>
+          <p>我们可以使用数组实现这样的动态列表，并不得不在原数组上加上更多的操作提供所有这些功能。</p>
+          <p>为了简化设计，我们假设该列表的数据类型是整形</p>
+          <p>我们可以做：</p>
+          <ul>
+          <li><p>定义一个最大值，声明这么大一个数组</p>
+          <ul>
+          <li>int A[MAXSIZE];</li>
+          </ul></li>
+          <li><p>接着定义一个变量用来标记列表的结尾</p>
+          <ul>
+          <li>int end = -1; //初始化为空</li>
+          </ul></li>
+          <li><p>insert(2)
+          //始终插入到列表的末尾，这里在零位置插入一个元素，现在end变为0</p></li>
+          <li><p>insert(4);insert(6);insert(7);insert(9);</p></li>
+          <li><p>insert(5, 2);
+          //在2位置插入5。如果我们需要在已有元素的位置插入一个元素，那么其上和之后的元素都将向右移动一个单位。</p></li>
+          <li><p>remove(0)
+          //删除索引为0的元素。为此，索引为0后的所有这些元素都将向小的方向移位一个单位。</p></li>
+          </ul>
+          <p>看起来差不多实现了，但我们曾说过需要一个动态数组，在当前的设计中，我们总是可以用尽数组，没有合适的MAXSIZE。</p>
+          <p>when arry is full, create a new larger array， copy previous
+          array into the new array.</p>
+          <p>free the memory for the previous array.</p>
+          <p>那么当前的问题是，我们应该为新数组增加的大小是多少？</p>
+          <p>从原数组中copy所有元素cost lots of
+          time，这里后面再谈，通常我们会给新的数组两倍于原数组的大小。</p>
+          <p><strong>数据结构的研究不仅仅是研究操作以及这些操作的实现，越是关于分析这些操作的成本</strong></p>
+          <p>我们来看看在动态列表中的操作消耗多少时间成本</p>
+          <ul>
+          <li><p>Acess - Read/Write element at an index</p>
+          <ul>
+          <li>cost a constant time, O(1)</li>
+          </ul></li>
+          <li><p>Insert - O(n) 是关于列表大小的线性函数</p></li>
+          <li><p>Remove - O(n)</p></li>
+          <li><p>Add a new element usually cost constant time,
+          但是在元素已满的情况下，花费的时间又将于数组元素个数成正比
+          O(n)</p></li>
+          </ul>
+          <p>这样的设计使得我们可以永远花费恒定的时间来操作数组。但是可以看到Insert和Remove的成本很高，如果增加或减少很多，我们还必须创建一个新的数组并复制所有这些东西，一次又一次把先前数组的元素拷贝到新数组中。但是在很多时候，数组中的内存并不在被使用，也就是说动态数组在内存而言实现效率不高。这导致我们思考，是否存在一种动态数组可以更加有效地使用内存，也就是一个给我们给更高内存利用率的数据结构。这个数据结构就是链表<strong>Link
+          List</strong>。</p>
+          <h2 id="link-list">Link List</h2>
+          <p>上一个例子中，我们尝试使用数组实现动态列表，但是发现在存储使用方面并不有效。当我们使用数组时，我们需要理解链表的一些限制，以便更好地理解链表。</p>
+          <p>在计算机内存储中，每字节的内存都有一个地址。假设其从左边向右边延伸。</p>
+          <p>假设第一个地址（最左边）是200，它的右边是201。</p>
+          <p>内存是很重要的资源，几乎每个应用程序都会请求它。因此，计算机将这个管理内存的任务交给了一个叫内存管理器<strong>Memory
+          Manager</strong>的成员&lt;–它负责跟踪内存中哪些部分是空闲的，哪些部分是已被分配的。任何需要内存来存储数据的应用程序都需要与它交谈。</p>
+          <p>此时一个程序想在内存中存储一个整数，<strong>小程</strong>通过声明一个整数变量来与内存管理器沟通。</p>
+          <div class="sourceCode" id="cb4"><pre
+          class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> x<span class="op">;</span></span></code></pre></div>
+          <p>Memory
+          Manager看到之后，向这个请求分配了4个字节的内存。怎么分配呢？内存管理器在内存中寻找4个字节的空闲空间，并为变量X分配。内存块的地址是内存中第一个字节的地址，假设第一个字节的内存地址是217。所以变量x在217，内存管理器将这个信息传达给小程，小程就可以在这个变量中填入任何数据。</p>
+          <div class="sourceCode" id="cb5"><pre
+          class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> A<span class="op">[</span><span class="dv">4</span><span class="op">];</span></span></code></pre></div>
+          <p>现在小程需要存储一个整数列表，它认为这个列表中最多有4个整数，所以向内存管理器请求一个名为A的大小为4的整数数组。数组总是作为一个连续的内存块存储在内存中，所以内存管理器为数组A寻找一个16字节长的内存块，找到了，并分配这个块的起始地址201和结束地址216。</p>
+          <p>数组作为连续的内存空间，每当小程想要访问数组中的任何元素时，比如它尝试在数组的第4个元素中写入一些值<code>A[3] = 2;</code>,因为小程知道块A的起始地址201，所以201+3来计算<code>A[3]</code>的地址。</p>
+          <p>要访问数组中的任何元素，需要<strong>constant
+          time</strong>，即应用程序可以在<strong>常数时间</strong>内访问数组中的任何元素。</p>
+          <p>假设当前的A是[6,4,4,2]，x是8，A和x首尾相连。小程此时想在数组中添加第5个元素，所以问内存管理器说想要扩展我的数组A，能做到吗？不行的！因为内存管理器在为数组分配内存时，并不期望小程会要求扩展。在一般情况下，A的右边还有空块的情况下，是OK的。但这里有一个变量X在A的旁边，所以不行。</p>
+          <p>那要怎么办？内存管理器说小程你告诉我要扩展的大小，我可以在某个新地址重新创建一个新块。我们将不得不把所有元素从先前的块复制到新块。这次新的地址是224，并且小程要求内存管理器释放先前的块，必须支付的代价是将所有元素、所有数组从先前的块复制到新块中。这次小程将数组保持得很大，以防出现相同的情况。</p>
+          <p>所以小程唯一的选择是将A创建为一个新的块，但仍感到不安。因为如果它没有使用巨大A的某些部分，就意味着内存被浪费了，而如果元素增加得过多，它又不得不创建一个新块，并复制所有元素。这个问题的解决方案是一个新的数据结构————链表。</p>
+          <blockquote>
+          <p>别说，还真蛮清晰的。==_==
+          现在终于知道从存储结构上来说数组的不足了。</p>
+          </blockquote>
+          <p>我们来康康链表是怎么工作的。这是小程可以做的是，不再向内存管理器请求一个数组，一个巨大的连续内存块，而是可以一次请求<strong>一个</strong>数据单位，作为一个单独的请求。现在清理下刚才的内存，干净了。</p>
+          <p>假设小程要存储一个包含4个整数的列表，并一次请求一个单元，内存管理器告诉它在地址204获得这个4字节的块，小程用来存储6，再向内存管理器提出一个单独的请求来存储数字5，假设它获得从地址217开始的块来存储数字。因为每次发送的是单独的请求，所以有可能也有可能不会获得与数字6相邻的内存，内存中空余的位置有这么多，更大的可能性是他不会获得相邻的内存位置。接着小程分别为数字4和2发出单独的请求，假设在232和242获得这俩块。我们可以看到，小程并没有获得一个连续的内存块，而是获得了不相连的非连续内存块。除此之外，链表不可能不付出任何代价就能取得比数组更好的效果，我们需要以某种方式将这些块链接在一起。在数组中这很简单，我们可以通过块的起始位置和数组中元素的位置来计算其位置；在链表里我们需要知道这是第一个元素，这是第二个…以此类推。为了将他们连在一起，并存储位置信息，我们可以在每块中存储一些额外信息。比方说我们可以在每个块中有两部分：一个部分存储数据或值，另一部分存储下一个块的地址。</p>
+          <div class="sourceCode" id="cb6"><pre
+          class="sourceCode c"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="op">[[</span><span class="dv">6</span><span class="op">,</span><span class="at"> </span><span class="dv">217</span><span class="op">],</span><span class="at"> </span><span class="op">[</span><span class="dv">5</span><span class="op">,</span><span class="at"> </span><span class="dv">232</span><span class="op">],</span><span class="at"> </span><span class="op">[</span><span class="dv">4</span><span class="op">,</span><span class="at"> </span><span class="dv">242</span><span class="op">],</span><span class="at"> </span><span class="op">[</span><span class="dv">2</span><span class="op">,</span><span class="at"> </span><span class="dv">0</span><span class="op">]]</span>  <span class="co">// 2后没有元素，可以设成0，0是无效地址，可以用来标记结尾</span></span></code></pre></div>
+          <p>所以一次单独的请求实际上是小程在向内存管理器请求一个包含两部分内容的块。C中可以写成：</p>
+          <div class="sourceCode" id="cb7"><pre
+          class="sourceCode c"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Struct Node<span class="op">{</span></span>
+    <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> data<span class="op">;</span>  <span class="co">// 4 bytes</span></span>
+    <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    Node<span class="op">*</span> next<span class="op">;</span>  <span class="co">// 4 more bytes for pointer</span></span>
+    <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+          <p>链表的逻辑视图就是以上，数据存储在这些节点中，每个节点存储数据和到下一个节点的链接。第一个节点被称为头节点，我们保留的唯一信息是头节点的地址，头节点的地址可以让我们访问完整的列表；最后一个节点的地址是null或0。我们想遍历链表唯一的方法是从头开始，找到第一个节点，然后一个一个询问下去。之后的一切增删改操作都与调节节点指向地址有关。</p>
+          <p>与数组不同的是，<strong>我们无法在常数时间内访问任何元素</strong>，这是可想而知的。我们必须从头开始一个一个询问，因此访问元素所需的时间将于链表的大小成正比，操作的时间代价是O(n)。要插入时我们也需要遍历整个链表并到达那个特定位置，所以时间复杂度还是O(n)，唯一有变化的是，插入这个操作本身是常数级别的，我们不需要像在数组中那样进行所有的位移。同样道理的，删除操作也是O(n)。</p>
+          <p>相比数组我们可以发现，<strong>没有内存未被使用</strong>，但也用了一些额外的内存来存储地址。好处是可以随时进行增加或删除操作，而不再像数组中那样先猜测需要的大小。</p>
+          <blockquote>
+          <p>写一篇蛮花时间的（擦汗），之后少写点，多点真正值得记录的内容。</p>
+          </blockquote>
+        </main>
+
+
+    <!-- CONTAINER_END -->
+  </main>
+
+  <footer id="site-footer">
+    <div style="display: flex; flex-direction: column">
+      <div style="display: flex">
+        <div style="display: flex; align-self: flex-start; gap: 70px; flex: 1">
+          <div style="display: flex; flex-direction: column">
+            <p style="font-size: 20px; margin-bottom: 16px; font-weight: 800">
+              友链
+            </p>
+            <p>
+              <a href="https://tzblog.tech" target="_blank" class="post-link"
+                >小周的笔记</a
+              >
+            </p>
+            <p>
+              <a
+                href="https://homura.great-site.net/blog/?i=1"
+                target="_blank"
+                class="post-link"
+                >lhc's ideas</a
+              >
+            </p>
+            <p>Q</p>
+            <p>
+              <a href="https://naoh3326.xyz" target="_blank" class="post-link"
+                >NaOh</a
+              >
+            </p>
+          </div>
+          <div style="display: flex; flex-direction: column">
+            <p style="margin-bottom: 16px; font-size: 20px; font-weight: 800">
+              评论
+            </p>
+            <p style="color: #acb02b">Coming soon</p>
+          </div>
+        </div>
+
+        <div style="margin-left: auto">
+          <img
+            src="../images/footer.webp"
+            alt="footer-links"
+            style="
+              width: 300px;
+              margin-left: auto;
+              display: block;
+              margin-top: -7px;
+            "
+          />
+        </div>
+      </div>
+      <div style="display: flex; justify-content: center">
+        <p
+          style="
+            color: #555555;
+            margin-top: 14px;
+            margin-bottom: -7px;
+            font-family: Source Sans Pro;
+          "
+        >
+          &copy; 2026 Lyon Chow. All rights reserved.
+        </p>
+      </div>
+    </div>
+  </footer>
+</div>
+<!-- /#main_container -->
+    <!-- LAYOUT_END -->
+  </body>
+</html>

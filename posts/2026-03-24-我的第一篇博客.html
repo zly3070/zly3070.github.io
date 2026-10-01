@@ -3,19 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>最近</title>
-    <meta name="description" content="所有文章列表：学习笔记、论文精读、技术思考。" />
-    <link rel="canonical" href="https://zly3070.github.io/Recent.html" />
-    <link rel="stylesheet" href="style.css" />
+    <title>我的第一篇博客 - Lyon Dev</title>
+    <!-- canonical 由 scripts/inject_layout.py 按真实文件名填入（含百分号编码） -->
+    <link rel="canonical" href="https://zly3070.github.io/posts/2026-03-24-%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2.html" />
+    <!-- 描述也由注入器按文章逐篇补上 -->
+    <meta name="description" content="记录个人网站上线的第一天：搞懂 GitHub Pages 原理、用 Jekyll 搭起博客、学会用 SSH 推送代码。" />
+    <link rel="stylesheet" href="../style.css" />
     <!-- 使用 MathJax 渲染公式 -->
     <script
       src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
       async
     ></script>
     <style>
-      /* Recent.html 自己的布局。
-         基础样式（reset / 字体 / 链接 / blockquote / code / 页脚）统一在 style.css 里，
-         以前这里抄了一整份，改一处忘两处，现在不抄了。 */
+      /* 文章页模板自己的布局。
+         生成出来的文章在 posts/ 目录下，所以上面引用 ../style.css。
+         基础样式统一在 style.css 里，改样式只改那一个文件，不用重新生成文章。 */
 
       body {
         display: flex;
@@ -38,7 +40,7 @@
     </style>
       <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>最近</title>
+    <title>我的第一篇博客</title>
     <script
       src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
       async
@@ -66,7 +68,7 @@
          放成 body 的第三个子元素会被当成横排的第三列排到右边去（踩过）。 -->
 <header id="top">
   <div class="site-logo">
-    <img src="./images/header_hello_cut.webp" alt="header-hello" />
+    <img src="../images/header_hello_cut.webp" alt="header-hello" />
   </div>
   <div class="site-tagline">
     <h6>BUG! SQUASH!</h6>
@@ -80,7 +82,7 @@
       <p class="site-intro">
         Major in SE, worry about the future 很想很想拍好看照片 (>_<)ゞ
         <br />
-        <a href="./about.html" class="post-link">More about me.</a>
+        <a href="../about.html" class="post-link">More about me.</a>
       </p>
     </div>
 
@@ -151,116 +153,31 @@
   <main id="content_container">
     <!-- CONTAINER_START -->
     <main id="main">
-      <h1 style="margin: 0px; white-space: nowrap">
+      <h1 style="margin: 0px">
         <a
-          href="home.html"
+          href="../index.html"
           class="post-link"
 
           style="text-decoration: none; margin: 0px"
           >~/</a
         >
-        最近
       </h1>
       <hr width="100%" style="margin-top: 0px; margin-bottom: 40px" />
-
-      <div
-        id="post-list"
-        style="display: flex; flex-direction: column; gap: 20px"
-      ></div>
-      <!-- 文章列表由 JS 填充 -->
+      <p>今天，我的个人网站正式上线了！</p>
+      <p><em>记录个人网站上线的第一天：搞懂 GitHub Pages 原理、用 Jekyll
+      搭起博客、学会用 SSH 推送代码。</em></p>
+      <h2 id="今天做了什么">今天做了什么</h2>
+      <ul>
+      <li>搞懂了 GitHub Pages 的原理</li>
+      <li>用 Jekyll 搭了一个博客</li>
+      <li>学会了用 SSH 推送代码</li>
+      </ul>
+      <h2 id="下一步">下一步</h2>
+      <ul>
+      <li>每天写一篇记录</li>
+      <li>慢慢把网站改成我喜欢的样子</li>
+      </ul>
     </main>
-
-    <script>
-      (function () {
-        // 读取 post_list.json（python 生成的静态数据）
-        fetch("post_list.json")
-          .then(function (res) {
-            if (!res.ok)
-              throw new Error("post_list.json 加载失败: " + res.status);
-            return res.json();
-          })
-          .then(function (posts) {
-            renderPostList(posts);
-          })
-          .catch(function (err) {
-            console.error(err);
-          });
-
-        function renderPostList(posts) {
-          var container = document.getElementById("post-list");
-          if (!container) return;
-
-          if (!posts || posts.length === 0) {
-            container.innerHTML = "<p>还没有文章。</p>";
-            return;
-          }
-
-          var html = "";
-
-          posts.forEach(function (post) {
-            var desc = post.description
-              ? '<p style="font-size:16px; margin:2px 0 0 0;">' +
-                escapeHtml(post.description) +
-                "</p>"
-              : "";
-
-            html +=
-              '<div style="display:flex;">' +
-              '<span style="font-family:Consolas; font-size:16px; color:#666666; white-space:nowrap;">' +
-              formatDate(post.date) +
-              "&nbsp" +
-              "</span>" +
-              '<div style="display:flex; flex-direction:column; gap:3px; width:400px;">' +
-              '<a href="./posts/' +
-              encodeURI(post.filename) +
-              '" style="font-size:18px; width:fit-content;" class="post-title">' +
-              escapeHtml(post.title) +
-              "</a>" +
-              desc +
-              "</div>" +
-              "</div>";
-          });
-
-          container.innerHTML = html;
-        }
-
-        // 转义 HTML，防止特殊字符破坏结构
-        function escapeHtml(str) {
-          var div = document.createElement("div");
-          div.textContent = String(str == null ? "" : str);
-          return div.innerHTML;
-        }
-
-        // 将 "2026-03-26" 格式化为 "26 Mar 2026"
-        function formatDate(dateStr) {
-          if (!dateStr) return "";
-          var parts = dateStr.split("-");
-          if (parts.length !== 3) return dateStr;
-          var months = [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Oct",
-            "Nov",
-            "Dec",
-          ];
-          var m = parseInt(parts[1], 10) - 1;
-          var monthName = months[m] || parts[1];
-          return parseInt(parts[2], 10) + " " + monthName + " " + parts[0];
-        }
-      })();
-    </script>
-
-
-
-
-
 
 
     <!-- CONTAINER_END -->
@@ -304,7 +221,7 @@
 
         <div style="margin-left: auto">
           <img
-            src="./images/footer.webp"
+            src="../images/footer.webp"
             alt="footer-links"
             style="
               width: 300px;

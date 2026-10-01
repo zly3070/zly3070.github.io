@@ -3,19 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>最近</title>
-    <meta name="description" content="所有文章列表：学习笔记、论文精读、技术思考。" />
-    <link rel="canonical" href="https://zly3070.github.io/Recent.html" />
-    <link rel="stylesheet" href="style.css" />
+    <title>AdaptiveThinking - Lyon Dev</title>
+    <!-- canonical 由 scripts/inject_layout.py 按真实文件名填入（含百分号编码） -->
+    <link rel="canonical" href="https://zly3070.github.io/posts/2026-07-30-AdaptiveThinking.html" />
+    <!-- 描述也由注入器按文章逐篇补上 -->
+    <meta name="description" content="自适应思考：大语言模型知道何时在潜在空间中进行思考。让大语言模型在推理时根据问题的难度，动态决定“思考”多长时间，从而在保持准确率的同时大幅节省计算资源" />
+    <link rel="stylesheet" href="../style.css" />
     <!-- 使用 MathJax 渲染公式 -->
     <script
       src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
       async
     ></script>
     <style>
-      /* Recent.html 自己的布局。
-         基础样式（reset / 字体 / 链接 / blockquote / code / 页脚）统一在 style.css 里，
-         以前这里抄了一整份，改一处忘两处，现在不抄了。 */
+      /* 文章页模板自己的布局。
+         生成出来的文章在 posts/ 目录下，所以上面引用 ../style.css。
+         基础样式统一在 style.css 里，改样式只改那一个文件，不用重新生成文章。 */
 
       body {
         display: flex;
@@ -38,7 +40,7 @@
     </style>
       <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>最近</title>
+    <title>AdaptiveThinking</title>
     <script
       src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
       async
@@ -66,7 +68,7 @@
          放成 body 的第三个子元素会被当成横排的第三列排到右边去（踩过）。 -->
 <header id="top">
   <div class="site-logo">
-    <img src="./images/header_hello_cut.webp" alt="header-hello" />
+    <img src="../images/header_hello_cut.webp" alt="header-hello" />
   </div>
   <div class="site-tagline">
     <h6>BUG! SQUASH!</h6>
@@ -80,7 +82,7 @@
       <p class="site-intro">
         Major in SE, worry about the future 很想很想拍好看照片 (>_<)ゞ
         <br />
-        <a href="./about.html" class="post-link">More about me.</a>
+        <a href="../about.html" class="post-link">More about me.</a>
       </p>
     </div>
 
@@ -151,116 +153,60 @@
   <main id="content_container">
     <!-- CONTAINER_START -->
     <main id="main">
-      <h1 style="margin: 0px; white-space: nowrap">
+      <h1 style="margin: 0px">
         <a
-          href="home.html"
+          href="../index.html"
           class="post-link"
 
           style="text-decoration: none; margin: 0px"
           >~/</a
         >
-        最近
       </h1>
       <hr width="100%" style="margin-top: 0px; margin-bottom: 40px" />
-
-      <div
-        id="post-list"
-        style="display: flex; flex-direction: column; gap: 20px"
-      ></div>
-      <!-- 文章列表由 JS 填充 -->
+      <p><em>自适应思考：大语言模型知道何时在潜在空间中进行思考。让大语言模型在推理时根据问题的难度，动态决定“思考”多长时间，从而在保持准确率的同时大幅节省计算资源</em></p>
+      <h1
+      id="adaptive-thinking-large-language-models-know-when-to-think-in-latent-space1">Adaptive
+      Thinking: Large Language Models Know When To Think In Latent
+      Space<a href="#fn1" class="footnote-ref" id="fnref1"
+      role="doc-noteref"><sup>1</sup></a></h1>
+      <p>LLM推理时的CoT能显著提升性能，但是固定预算效率不高，问题是如何为每个查询自适应地分配最优的思考预算？</p>
+      <p>自洽性意为让模型对同一个问题输入进行多次回答，回答的一致性高则说明自洽性高，答案一般大差不差；自洽性低的情况则意味着该查询比较复杂，需要更深入的思考。</p>
+      <p><strong>提出Sonata，一个轻量级适配器，通过预测查询的自洽性来动态分配思考预算。得到预测后，Sonata会在模型开始思考之前，就分配好比如允许本次生成多少思考token，简单题少想，难题多想。本质逻辑是读取模型隐藏层表示，“以过往经验，判断当下任务”。</strong></p>
+      <p>CoT很好，能显著提升模型面对复杂任务的表现。但出于对计算资源的担忧，对于简单问题的过度思考不仅浪费算力，有时还会因为想太复杂反而出错；对于需要深度推理的难题，给太少时间模型又可能抓瞎直接给出错误答案这样的问题，我们提出能不能在模型开始思考之前，就可以知道这饿问题到底有多难，需要多少思考时间？</p>
+      <p>因此提出<strong>自洽性(Self-Consistency)</strong>这个概念：给定一个查询，从LLM采样多条推理路径，最终答案的一致性程度。</p>
+      <blockquote>
+      <p>SC(q) = 1 / N * Sigma(i=1~N){I[ai = a*]}</p>
+      </blockquote>
+      <p>在MATH-500任务中，随着难度增加，自洽性分数整体下降，有力校验了这一指标的可行性。</p>
+      <p>此外还验证了自洽性和思考收益的关系。过程不放出来了，总之就是自洽性分数与思考带来的性能提升之间存在强烈的负相关关系：低自洽性的查询启用思考后提升显著，反之亦然。说明了自洽性是判断是否需要以及需要多少思考的可靠指标，告诉我们一个问题是否值得投入宝贵的思考资源。</p>
+      <p>但是记得上面是怎么说的了吗？计算自洽性需要昂贵的重复采样，这与高效推理的目标相悖。如果为了决定要不要思考而又得先花大力气算一遍自洽性，那不就是本末倒置了吗？<strong>所以关键问题来了，有没有可能直接绕过这个昂贵的采样步骤，直接从模型内部的状态中读取自洽性的信息呢？</strong></p>
+      <p>这就引出了论文团队的关键发现：一、他们发现不同自洽性水平的问题，在模型的潜空间里，也就是隐藏层表示里，是能被清晰地区分开来的。提取模型最后一层Transformer层输出的隐藏状态再用PCA降维到二维平面上画出来。结果如下图所示，无疑是非常惊人的！这说明模型内部似乎天然就编码了关于问题自洽性的某种信息。二、通过观察下图，我们也能发现这种区分能力随着网络层数的加深而增强，越靠后的Transformer层中高自洽性和低自洽性的点分得越开。不过想一想也是哈，越深层的网络通常复杂捕捉更抽象、更复杂的概念和推理模式，这其中很有可能就包含了自洽性的语义。</p>
+      <p><img src="../images/AdaptiveThinking-SCinHiddenLayers.webp" alt="AdaptiveThinking-SCinHiddenLayers" style="zoom:110%;" /></p>
+      <p>那么至此，问题的解就已经很清楚了，这告诉我们，不需要真的去跑多次推理来算自洽性，而是偷看下模型最后一层的隐藏状态就能大致得出这个问题自洽性的高低。</p>
+      <h3 id="sonata框架概述">Sonata框架概述</h3>
+      <ul>
+      <li><p>离线训练阶段: 使用校准数据集 Dcal，训练MLP适配器 fθ
+      将隐藏状态 hi 映射到 SCi。</p></li>
+      <li><p>在线推理阶段: 预测自洽性 s^，若 s^&gt;τ0
+      则不思考，否则进行思考。</p></li>
+      </ul>
+      <p>离线训练阶段对于每个校准问题，模型先跑一遍不思考模式，生成一堆答案，算出其自洽性分数。可以通过一个简单的MLP神经网络将最后一层Transformer最后一个token的隐藏状态和自洽性分数关联起来。</p>
+      <blockquote>
+      <p>这篇论文是最近读过中最浅显易懂的，心情舒畅了很多，同时也给自己一个契机吧，这个双休日调整下，不要每天睡到下午了。虽然从一片黑暗中睁眼再挣扎起床是很痛苦的事情，由简入奢易啊，但坚持到卫生间冷水抹把脸应该会好很多。周末也出去走走看看吧，一直在教学楼和寝室间两点一线挺闷的。这样子写下来会不会好点，应该会比心理上无声承诺好点。</p>
+      <p>07-31今天是7月的最后一天，实习转眼间也是一个月之前做出的决定了，真应当感谢那个时候自己勇敢了一把，向师兄要到了在实验室实习的机会。一个月来也学到了很多，说不上毫无收获，也算是收获颇丰了。接下去一个月是师兄也着力到我们实验中来的时间，要加倍努力了！</p>
+      </blockquote>
+      <section id="footnotes"
+      class="footnotes footnotes-end-of-document" role="doc-endnotes">
+      <hr />
+      <ol>
+      <li id="fn1"><p><a
+      href="https://arxiv.org/html/2505.13417v1">Adaptive Thinking:
+      Large Language Models Know When To Think In Latent Space</a><a
+      href="#fnref1" class="footnote-back"
+      role="doc-backlink">↩︎</a></p></li>
+      </ol>
+      </section>
     </main>
-
-    <script>
-      (function () {
-        // 读取 post_list.json（python 生成的静态数据）
-        fetch("post_list.json")
-          .then(function (res) {
-            if (!res.ok)
-              throw new Error("post_list.json 加载失败: " + res.status);
-            return res.json();
-          })
-          .then(function (posts) {
-            renderPostList(posts);
-          })
-          .catch(function (err) {
-            console.error(err);
-          });
-
-        function renderPostList(posts) {
-          var container = document.getElementById("post-list");
-          if (!container) return;
-
-          if (!posts || posts.length === 0) {
-            container.innerHTML = "<p>还没有文章。</p>";
-            return;
-          }
-
-          var html = "";
-
-          posts.forEach(function (post) {
-            var desc = post.description
-              ? '<p style="font-size:16px; margin:2px 0 0 0;">' +
-                escapeHtml(post.description) +
-                "</p>"
-              : "";
-
-            html +=
-              '<div style="display:flex;">' +
-              '<span style="font-family:Consolas; font-size:16px; color:#666666; white-space:nowrap;">' +
-              formatDate(post.date) +
-              "&nbsp" +
-              "</span>" +
-              '<div style="display:flex; flex-direction:column; gap:3px; width:400px;">' +
-              '<a href="./posts/' +
-              encodeURI(post.filename) +
-              '" style="font-size:18px; width:fit-content;" class="post-title">' +
-              escapeHtml(post.title) +
-              "</a>" +
-              desc +
-              "</div>" +
-              "</div>";
-          });
-
-          container.innerHTML = html;
-        }
-
-        // 转义 HTML，防止特殊字符破坏结构
-        function escapeHtml(str) {
-          var div = document.createElement("div");
-          div.textContent = String(str == null ? "" : str);
-          return div.innerHTML;
-        }
-
-        // 将 "2026-03-26" 格式化为 "26 Mar 2026"
-        function formatDate(dateStr) {
-          if (!dateStr) return "";
-          var parts = dateStr.split("-");
-          if (parts.length !== 3) return dateStr;
-          var months = [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Oct",
-            "Nov",
-            "Dec",
-          ];
-          var m = parseInt(parts[1], 10) - 1;
-          var monthName = months[m] || parts[1];
-          return parseInt(parts[2], 10) + " " + monthName + " " + parts[0];
-        }
-      })();
-    </script>
-
-
-
-
-
 
 
     <!-- CONTAINER_END -->
@@ -304,7 +250,7 @@
 
         <div style="margin-left: auto">
           <img
-            src="./images/footer.webp"
+            src="../images/footer.webp"
             alt="footer-links"
             style="
               width: 300px;

@@ -117,23 +117,66 @@ footer * {
 }
 
 /* ============================================================
-   6. 带侧栏的外壳布局（index.html 专用）
-   用 html[data-layout="sidebar"] 门控：
-   没有这个属性的页面完全不受影响。
+   6. 带侧栏的外壳布局
+   用 html[data-layout="sidebar"] 门控：没有这个属性的页面不受影响。
+
+   结构约定（body 只有两个子元素）：
+     body
+       ├─ <header id="top">            左侧栏，固定 250px，不滚动
+       └─ <div id="main_container">    右侧主容器，唯一的滚动区
+            ├─ <main id="content_container">   文章 / 照片墙等正文
+            └─ <footer id="site-footer">       页脚，放在主容器最下面
    ============================================================ */
 
 html[data-layout="sidebar"] body {
   flex-direction: row;
+  /* 整页固定一屏高，页面本身不滚动 —— 滚动只发生在 main_container 里 */
+  height: 100vh;
+  min-height: 0;
+  overflow: hidden;
 }
 
+/* 左侧栏：一直在左边，自己也不滚动。
+   高度跟随 body 的 100vh（flex 默认 stretch）。
+   注意：【不要】加 justify-content —— 你原来是用
+   .site-profile { margin-top: auto } 把简介推到底部的，
+   两者同时存在会把间距算重。 */
 #top {
   display: flex;
   flex-direction: column;
   padding: 23px 23px;
   width: 250px;
-  min-height: 100vh;
+  height: 100vh;
   border-right: 1px solid #e5e5e5;
   background-color: #f7f7f7;
+  flex-shrink: 0;
+  overflow-y: auto;
+}
+
+/* 右侧主容器：占满剩余宽度，是页面上唯一的滚动区。
+   文章再长，出现滚动条的也只是它，侧栏纹丝不动。 */
+#main_container {
+  flex: 1;
+  min-width: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+/* 正文区域：占满主容器在页脚之上的空间。
+   ⚠ 不要写 min-height: 0 —— 那会让 flex 把这一块压缩到比内容还小，
+     正文就会从框里溢出来盖住页脚（这个 bug 踩过，症状是页脚"浮"在文章上面）。
+     min-height: auto（默认）会保证它至少和内容一样高。 */
+#content_container {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  min-width: 0;
+}
+
+/* 页脚：在主容器最下面，不参与 flex 拉伸 */
+#site-footer {
   flex-shrink: 0;
 }
 
@@ -233,19 +276,4 @@ html[data-layout="sidebar"] body {
 .site-links .link-label {
   text-decoration: none;
   text-transform: uppercase;
-}
-
-/* 右侧内容区（iframe 时代用，改成真链接后可以整体删掉） */
-
-#content_container {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 100vh;
-}
-
-#main-frame {
-  flex: 1;
-  border: none;
-  width: 100%;
 }

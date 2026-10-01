@@ -1,18 +1,23 @@
-name: Convert Markdown to HTML # 工作流的名字，显示在github actions的界面上
+name: Build and Deploy Site # 构建并部署到 GitHub Pages
 
 on: # 触发条件
   push:
+    branches: [main]
     paths:
-      - "somePosts/*.md" # 只有.md文件变化时才触发
-      - "template.html" # 模板html变化也触发
-      - "home.html" # home.html 变化也触发重新生成列表
-      - ".github/workflows/AutoPost.yml"
-      - "scripts/UpdateHomehtml.py"
-      - "style.css"
+      - "posts/*.md" # 文章内容
+      - "template.html" # 文章模板
+      - "_partials/*.html" # 侧栏 / 首页正文等共享骨架
+      - "index.html" # 首页骨架
       - "about.html"
+      - "Recent.html"
+      - "style.css"
+      - "photos.json" # 照片墙数据
+      - "scripts/**"
+      - ".github/workflows/AutoPost.yml"
+  workflow_dispatch: # 也支持手动触发
 
 # 赋予部署权限
-permissions: 
+permissions:
   contents: read # 只需要读权限，不用写回仓库
   pages: write # 允许部署到 Pages
   id-token: write # 用于验证
@@ -23,11 +28,11 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  convert: # 任务名字
-    runs-on: ubuntu-latest # 运行在最新版Ubuntu
-    steps: # 顺序执行步骤
+  build:
+    runs-on: ubuntu-latest
+    steps:
       - name: Checkout repository
-        uses: actions/checkout@v4 # 使用官方checkout动作，将自己代码拉到服务器上
+        uses: actions/checkout@v4
 
       - name: Cache Pandoc
         id: cache-pandoc
@@ -42,55 +47,53 @@ jobs:
         with:
           version: 3.10
 
-      - name: Convert all .md files to .html
+      # 每个 posts/*.md 用 template.html 生成对应的 .html。
+      # 生成的页面里带 CONTAINER 标记（正文），下一步注入侧栏。
+      - name: Convert Markdown to HTML
         run: |
-          for file in somePosts/*.md; do
-            if [ -f "$file" ]; then
-              filename=$(basename "$file" .md)
+          for file in posts/*.md; do
+            [ -f "$file" ] || continue
+            filename=$(basename "$file" .md)
 
-              # 提取日期（格式：2026-03-26）
-              date_part=$(echo "$filename" | grep -oP '^\d{4}-\d{2}-\d{2}')
+            # 日期（形如 2026-03-26）
+            date_part=$(echo "$filename" | grep -oP '^\d{4}-\d{2}-\d{2}' || true)
+            # 标题（去掉日期前缀）
+            title_part=$(echo "$filename" | sed 's/^[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}-//')
 
-              # 提取标题（去掉日期和开头的 -）
-              title_part=$(echo "$filename" | sed 's/^[0-9\-]*\-//')
+            echo "Converting: $file  (date=$date_part title=$title_part)"
 
-              echo "Converting: $file"
-              echo "  Date: $date_part"
-              echo "  Title: $title_part"
+            pandoc "$file" \
+              -f markdown+tex_math_dollars \
+              --template=template.html \
+              --metadata title="${title_part}" \
+              --mathjax \
+              -o "posts/${filename}.html"
 
-                            pandoc "$file" \
-                -f markdown+tex_math_dollars \
-                --template=template.html \
-                --metadata title="${title_part}" \
-                --mathjax \
-                -o "somePosts/${filename}.html"
-
-              # 保存住日期、title、文件名信息，便于python脚本读取
-              echo "${date_part}|${title_part}|${filename}.html" >> post_list.txt
-            fi
+            # 供生成 post_list.json 使用
+            echo "${date_part}|${title_part}|${filename}.html" >> post_list.txt
           done
 
-      - name: Generate post list and update home.html
-        run: |
-          python scripts/UpdateHomehtml.py
+      # 注入侧栏/页脚：把 _partials/sidebar.html 注入每个页面，
+      # 同时生成 sitemap.xml 和 robots.txt。
+      # 本地预览（scripts/serve.py）调用的是同一个脚本，保证两边一致。
+      - name: Inject shared layout and generate sitemap
+        run: python scripts/inject_layout.py
 
-      - name: Upload artifact # 上传仓库至 github 的临时存储中
-        uses: actions/upload-pages-artifact@v3 
+      - name: Generate post_list.json
+        run: python scripts/UpdateHomehtml.py
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
           path: "."
 
   deploy:
-    needs: convert
+    needs: build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy to Github Pages
+      - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
-
-
-
-      

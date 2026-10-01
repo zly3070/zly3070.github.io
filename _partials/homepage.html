@@ -1,33 +1,8 @@
-<!doctype html>
-<html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home - Lyon Dev</title>
-    <link rel="stylesheet" href="style.css" />
-    <style>
-      /* home.html 自己覆盖 body 的布局 */
-      body {
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-      }
+<!-- 首页正文（由 home.html 抽出）。
+     由 scripts/inject_layout.py 注入到 index.html 的 #content_container 里。
+     {{BASE}} 是到站点根目录的相对前缀。 -->
 
-      #main {
-        display: flex;
-        flex-direction: column;
-        padding: 50px 150px;
-        flex: 1;
-      }
-
-      footer {
-        padding: 23px 150px;
-        flex-shrink: 0;
-      }
-    </style>
-  </head>
-  <body>
-    <main id="main">
+<main id="main">
       <div
         style="display: flex; align-items: center; gap: 8px; margin-top: -25px"
       >
@@ -47,7 +22,7 @@
         <div style="margin-top: 35px">
           <h1 style="font-weight: 800">
             最近
-            <a href="Recent.html" id="" class="post-link" target="main-frame">
+            <a href="{{BASE}}Recent.html" id="" class="post-link">
               ./</a
             >
           </h1>
@@ -115,75 +90,8 @@
       </div>
     </main>
 
-    <hr style="width: calc(100% - 300px); margin: auto" />
-
-    <footer>
-      <div style="display: flex; flex-direction: column">
-        <div style="display: flex">
-          <div
-            style="display: flex; align-self: flex-start; gap: 70px; flex: 1"
-          >
-            <div style="display: flex; flex-direction: column">
-              <p style="font-size: 20px; margin-bottom: 16px; font-weight: 800">
-                友链
-              </p>
-              <p>
-                <a href="https://tzblog.tech" target="_blank" class="post-link"
-                  >小周的笔记</a
-                >
-              </p>
-              <p>
-                <a
-                  href="https://homura.great-site.net/blog/?i=1"
-                  target="_blank"
-                  class="post-link"
-                  >lhc's ideas</a
-                >
-              </p>
-              <p>Q</p>
-              <p>
-                <a href="https://naoh3326.xyz" target="_blank" class="post-link"
-                  >NaOh</a
-                >
-              </p>
-            </div>
-            <div style="display: flex; flex-direction: column">
-              <p style="margin-bottom: 16px; font-size: 20px; font-weight: 800">
-                评论
-              </p>
-              <p style="color: #acb02b">Coming soon</p>
-            </div>
-          </div>
-
-          <div style="margin-left: auto">
-            <img
-              src="images/footer.webp"
-              alt="footer-links"
-              style="
-                width: 300px;
-                margin-left: auto;
-                display: block;
-                margin-top: -7px;
-              "
-            />
-          </div>
-        </div>
-        <div style="display: flex; justify-content: center">
-          <p
-            style="
-              color: #555555;
-              margin-top: 14px;
-              margin-bottom: -7px;
-              font-family: Source Sans Pro;
-            "
-          >
-            &copy; 2026 Lyon Chow. All rights reserved.
-          </p>
-        </div>
-      </div>
-    </footer>
-    <script>
-      (function () {
+<script>
+(function () {
         // 读取 post_list.json（python 生成的静态数据）
         fetch("post_list.json")
           .then(function (res) {
@@ -212,9 +120,9 @@
           shown.forEach(function (post) {
             // 点击跳转的只有标题（用 post-title，hover 变红）
             var titleLink =
-              '<a href="somePosts/' +
+              '<a href="{{BASE}}posts/' +
               encodeURI(post.filename) +
-              '" style="font-size:20px;" class="post-title" target="main-frame">' +
+              '" style="font-size:20px;" class="post-title">' +
               escapeHtml(post.title) +
               "</a>";
 
@@ -278,6 +186,4 @@
           return parseInt(parts[2], 10) + " " + monthName + " " + parts[0];
         }
       })();
-    </script>
-  </body>
-</html>
+</script>

@@ -1,209 +1,124 @@
 #!/usr/bin/env python3
 """
-这个脚本的作用：
-1. 读取 post_list.txt（Bash 生成的临时文件）
-2. 解析出日期、标题、文件名
-3. 生成文章列表的 HTML 代码
-4. 更新 home.html 中的文章列表区域
+生成 post_list.json（首页「最近」和 Recent.html 的文章列表数据）。
+
+数据来源有两条，按优先级尝试：
+  1) post_list.txt  —— GitHub Actions 里 pandoc 循环时写下的临时文件
+                       格式： 日期|标题|文件名
+  2) posts/*.html   —— 本地直接跑时没有 post_list.txt，就从文件名解析
+
+文件名格式约定：  YYYY-MM-DD-标题.md / .html
+简介提取：正文里第一段 _斜体_ 或 *斜体*
+
+历史说明：这个脚本以前叫「更新 home.html 的文章列表」，
+         在 5c7770e 改成前端 fetch json 之后，那段替换逻辑就成了死代码
+         （它找的 <!-- POST_LIST_START --> 标记已经不存在了），这里删掉。
 """
 
+import json
 import os
 import re
-import json
-from datetime import datetime
+import sys
+from pathlib import Path
 
-# ========== Step1: Read post_list.txt ==========
+for _s in (sys.stdout, sys.stderr):
+    try:
+        _s.reconfigure(encoding="utf-8", errors="replace")
+    except (AttributeError, ValueError):
+        pass
 
-def read_post_list() -> list:
-  """ 从 post_list.txt 读取文章信息
-  形如：
-  2026-03-26|想学计算机图形学|2026-03-26-想学计算机图形学.html
-  2026-03-24|我的第一篇博客|2026-03-24-我的第一篇博客.html
-  """
-  items = [] # 存放切割后信息
+ROOT = Path(__file__).parent.parent
+os.chdir(ROOT)
+POSTS_DIR = ROOT / "posts"
+OUT_FILE = ROOT / "post_list.json"
 
-  with open('post_list.txt', 'r', encoding='utf-8') as f:
-    for line in f:
-      line = line.strip() #去掉首位空白
-      if not line:
-        continue # 跳过空行
 
-      parts = line.split('|', 2) # 用 | 分割，返回列表，最多包含 2+1 个元素
+def parse_stem(stem: str):
+    """从 'YYYY-MM-DD-标题' 拆出日期和标题"""
+    m = re.match(r"^(\d{4}-\d{2}-\d{2})-(.*)$", stem)
+    if not m:
+        return "", stem
+    return m.group(1), m.group(2)
 
-      if len(parts) == 3:
-        date_str = parts[0]
-        title = parts[1]
-        filename = parts[2]
-        items.append((date_str, title, filename))
 
-  # 按日期倒序排列，最新的在最上面
-  items.sort(key=lambda x: x[0], reverse=True)
-  
-  return items
-
-# ========== Step2: Format Date ==========
-
-def format_date(date_str) -> str:
-  """
-    将 "2026-03-26" 格式化为 "26 Mar 2026"
-    月份用英文缩写
-  """
-
-  if not date_str:
-    return ""
-  
-  try:
-    # str -> datetime
-    date_obj = datetime.strptime(date_str, '%Y-%m-%d')
-    return date_obj.strftime("%d %b %Y")
-  except:
-    # 解析失败，返回源字符串
-    return date_str
-
-# ========== Step3: Generate HTML Post List ==========
-
-def extract_description(md_filename: str) -> str:
-    """从 md 文件开头提取第一段 _斜体_ 中的纯文本"""
-    filepath = os.path.join('somePosts', md_filename)
-    if not os.path.exists(filepath):
+def extract_description(md_path: Path) -> str:
+    """第一段 _斜体_ / *斜体* 里的纯文本"""
+    if not md_path.exists():
         return ""
-    
-    with open(filepath, 'r', encoding='utf-8') as f:
-        content = f.read()
-    
-    # 匹配第一组 _..._ 或 *...* 中的内容
-    match = re.search(r'_(.+?)_', content, re.DOTALL)
-    if not match:
-        match = re.search(r'\*(.+?)\*', content, re.DOTALL)
-    if not match:
+    content = md_path.read_text(encoding="utf-8")
+    m = re.search(r"_(.+?)_", content, re.DOTALL) or re.search(
+        r"\*(.+?)\*", content, re.DOTALL
+    )
+    if not m:
         return ""
-    
-    text = match.group(1)
-    
-    # 清除 Markdown 格式：**加粗**、`代码`、~~删除线~~ 等
-    text = re.sub(r'\*\*(.+?)\*\*', r'\1', text)  # **加粗**
-    text = re.sub(r'`(.+?)`', r'\1', text)         # `代码`
-    text = re.sub(r'~~(.+?)~~', r'\1', text)       # ~~删除线~~
-    text = re.sub(r'\[(.+?)\]\(.+?\)', r'\1', text) # [链接](url)
-    text = re.sub(r'!\[.*?\]\(.+?\)', '', text)     # ![图片](url)
+    text = m.group(1)
+    text = re.sub(r"\*\*(.+?)\*\*", r"\1", text)
+    text = re.sub(r"`(.+?)`", r"\1", text)
+    text = re.sub(r"~~(.+?)~~", r"\1", text)
+    text = re.sub(r"\[(.+?)\]\(.+?\)", r"\1", text)
+    text = re.sub(r"!\[.*?\]\(.+?\)", "", text)
     text = text.strip()
-    
-    # 限制长度（比如 150 字），防止简介太长
     if len(text) > 150:
         text = text[:147] + "..."
-    
     return text
 
-def generate_post_item(items) -> str:
-    html_items = []
 
-    for date_str, title, filename in items:
-        formatted_date = format_date(date_str)
+def read_from_txt():
+    """CI 里 pandoc 写的临时清单"""
+    f = ROOT / "post_list.txt"
+    if not f.exists():
+        return None
+    items = []
+    for line in f.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        parts = line.split("|", 2)
+        if len(parts) == 3:
+            items.append(parts)
+    return items or None
 
-        # 提取简介
-        md_filename = filename.replace('.html', '.md')
-        description = extract_description(md_filename)
 
-        # 有简介才生成 p 标签
-        desc_html = f'<p style="font-size: 16px;">{description}</p>' if description else ''
+def read_from_posts_dir():
+    """本地跑：直接扫 posts/*.html"""
+    if not POSTS_DIR.is_dir():
+        return []
+    items = []
+    for f in POSTS_DIR.glob("*.html"):
+        date, title = parse_stem(f.stem)
+        items.append((date, title, f.name))
+    return items
 
-        item = f'''
-          <div style="display:flex">
-            <span style="font-family: Consolas; font-size: 16px; color: #666666; white-space: nowrap;">
-              {formatted_date}&nbsp
-            </span>
-            <div style="display:flex; flex-direction:column; gap:1px; width:400px">
-              <a
-                href="somePosts/{filename}"
-                style="font-size: 18px; width: fit-content;"
-                class="post-title"
-                target="main-frame"
-              >
-                {title}
-              </a>
-              {desc_html}
-            </div>
-          </div>'''
 
-        html_items.append(item)
+def main():
+    items = read_from_txt()
+    source = "post_list.txt"
+    if items is None:
+        items = read_from_posts_dir()
+        source = "posts/*.html"
 
-    return '\n'.join(html_items)
+    if not items:
+        print("没有找到任何文章")
+        return
 
-def generate_post_list_json(items) -> None:
-    """生成 post_list.json，供前端 JS 读取并渲染卡片"""
+    items.sort(key=lambda x: x[0], reverse=True)
+
     data = []
     for date_str, title, filename in items:
-        md_filename = filename.replace('.html', '.md')
-        description = extract_description(md_filename)
-
         data.append({
             "date": date_str,
             "title": title,
-            "description": description,
-            "filename": filename
+            "description": extract_description(
+                POSTS_DIR / filename.replace(".html", ".md")
+            ),
+            "filename": filename,
         })
 
-    with open('post_list.json', 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+    OUT_FILE.write_text(
+        json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+    print(f"已生成 post_list.json（{len(data)} 篇，来源：{source}）")
 
-    print(f"成功生成 post_list.json（共 {len(data)} 篇文章）")
 
-# ========== Step4: Update Homehtml ==========
-
-def update_home_html(new_post_items):
-  """
-    在 home.html 中找到 <!-- POST_LIST_START --> 和 <!-- POST_LIST_END -->
-    之间的内容，替换成新的文章列表
-  """
-   
-  # 读取home.html
-  with open('home.html', 'r', encoding='utf-8') as f:
-    content = f.read()
-
-  # 定义标记
-  start_marker = '<!-- POST_LIST_START -->'
-  end_marker = '<!-- POST_LIST_END -->'
-
-  # 检查标记
-  if start_marker not in content or end_marker not in content:
-    print("错误：home.html中未找到 POST_LIST 标记！")
-    print(f"请确保 home.html 中包含：")
-    print(f"{start_marker}")
-    print(f"{end_marker}")
-    return
-  
-  # 使用正则表达式替换标记之间的内容
-  # re.DOTALL 让 . 也能匹配换行符
-  pattern = re.compile(
-    re.escape(start_marker) + r'.*?' + re.escape(end_marker), re.DOTALL)
-  
-  # 新的内容块
-  new_block = f'''{start_marker}{new_post_items}{end_marker}'''
-
-  # 执行替换
-  content = pattern.sub(new_block, content)
-
-  # 写回 home.html
-  with open('home.html', 'w', encoding='utf-8') as f:
-    f.write(content)
-  
-  print("成功更新 home.html 的文章列表")
-
-# ========== 主程序 ==========
-
-if __name__ == '__main__':
-  print("开始更新文章列表")
-
-  # 1、读取文章列表
-  items = read_post_list()
-  print(f"读取到 {len(items)} 篇文章")
-
-  if not items:
-    print("没有文章需要更新")
-    exit(0)
-
-      # 2、生成 post_list.json（供前端 JS 读取渲染卡片）
-  generate_post_list_json(items)
-
-  print("完成")
-
+if __name__ == "__main__":
+    main()
