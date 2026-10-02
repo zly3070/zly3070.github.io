@@ -1,0 +1,28 @@
+<!-- ============================================================
+     src/page-post.html —— 文章页的「正文片段」模板（pandoc 用）。
+
+     pandoc 把 markdown 渲染进这个模板，产出的是一段 **HTML 片段**
+     （<main id="main"> ... </main>，不含 <html>/<head>）。
+     然后 scripts/build.py 用 src/page-shell.html 给它套上骨架、侧栏和页脚。
+
+     为什么要分成「片段 + 骨架」而不是让 pandoc 直接输出整页：
+       骨架（侧栏/页脚/head）是全站共用的一份，
+       如果 pandoc 也输出一遍，就有两份要同步，改一处忘一处。
+
+     pandoc 填的变量：
+       $body$   markdown 正文（渲染好的 HTML）
+
+     想改文章页的顶部（比如把 ~/ 换掉、加个目录），改这个文件的 <main> 开头。
+     ============================================================ -->
+<main id="main">
+  <h1 style="margin: 0px">
+    <a
+      href="../index.html"
+      class="post-link"
+      style="text-decoration: none; margin: 0px"
+      >~/</a
+    >
+  </h1>
+  <hr width="100%" style="margin-top: 0px; margin-bottom: 40px" />
+  $body$
+</main>

@@ -1,0 +1,118 @@
+<!-- page-recent.html：最近页的正文。
+     由 scripts/build.py 注入页面骨架。
+     {{BASE}} 是到站点根目录的相对前缀（根目录页面为 './'）。 -->
+
+<main id="main">
+  <h1 style="margin: 0px; white-space: nowrap">
+    <a
+      href="{{BASE}}index.html"
+      class="post-link"
+      style="text-decoration: none; margin: 0px"
+      >~/</a
+    >
+    最近
+  </h1>
+  <hr width="100%" style="margin-top: 0px; margin-bottom: 40px" />
+
+  <div
+    id="post-list"
+    style="display: flex; flex-direction: column; gap: 20px"
+  ></div>
+  <!-- 文章列表由 JS 填充 -->
+</main>
+
+<script>
+  (function () {
+    // 读取 post_list.json（python 生成的静态数据）
+    fetch("post_list.json")
+      .then(function (res) {
+        if (!res.ok)
+          throw new Error("post_list.json 加载失败: " + res.status);
+        return res.json();
+      })
+      .then(function (posts) {
+        renderPostList(posts);
+      })
+      .catch(function (err) {
+        console.error(err);
+      });
+
+    function renderPostList(posts) {
+      var container = document.getElementById("post-list");
+      if (!container) return;
+
+      if (!posts || posts.length === 0) {
+        container.innerHTML = "<p>还没有文章。</p>";
+        return;
+      }
+
+      var html = "";
+
+      posts.forEach(function (post) {
+        var desc = post.description
+          ? '<p style="font-size:16px; margin:2px 0 0 0;">' +
+            escapeHtml(post.description) +
+            "</p>"
+          : "";
+
+        html +=
+          '<div style="display:flex;">' +
+          '<span style="font-family:Consolas; font-size:16px; color:#666666; white-space:nowrap;">' +
+          formatDate(post.date) +
+          "&nbsp" +
+          "</span>" +
+          '<div style="display:flex; flex-direction:column; gap:3px; width:400px;">' +
+          '<a href="{{BASE}}posts/' +
+          encodeURI(post.filename) +
+          '" style="font-size:18px; width:fit-content;" class="post-title">' +
+          escapeHtml(post.title) +
+          "</a>" +
+          desc +
+          "</div>" +
+          "</div>";
+      });
+
+      container.innerHTML = html;
+    }
+
+    // 转义 HTML，防止特殊字符破坏结构
+    function escapeHtml(str) {
+      var div = document.createElement("div");
+      div.textContent = String(str == null ? "" : str);
+      return div.innerHTML;
+    }
+
+    // 将 "2026-03-26" 格式化为 "26 Mar 2026"
+    function formatDate(dateStr) {
+      if (!dateStr) return "";
+      var parts = dateStr.split("-");
+      if (parts.length !== 3) return dateStr;
+      var months = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+      var m = parseInt(parts[1], 10) - 1;
+      var monthName = months[m] || parts[1];
+      return parseInt(parts[2], 10) + " " + monthName + " " + parts[0];
+    }
+  })();
+</script>
+
+
+
+
+
+
+
+
+

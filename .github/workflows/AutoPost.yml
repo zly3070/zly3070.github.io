@@ -1,28 +1,23 @@
-name: Build and Deploy Site # 构建并部署到 GitHub Pages
+name: Build and Deploy Site
 
-on: # 触发条件
+# 触发：只监听「源」。产物（index.html / posts/*.html / style.css …）不再进仓库，
+# 所以不需要监听它们。
+on:
   push:
     branches: [main]
     paths:
+      - "src/**" # 所有源：骨架 / 侧栏 / 各页正文 / 样式
       - "posts/*.md" # 文章内容
-      - "template.html" # 文章模板
-      - "_partials/*.html" # 侧栏 / 首页正文等共享骨架
-      - "index.html" # 首页骨架
-      - "about.html"
-      - "Recent.html"
-      - "style.css"
       - "photos.json" # 照片墙数据
       - "scripts/**"
       - ".github/workflows/AutoPost.yml"
   workflow_dispatch: # 也支持手动触发
 
-# 赋予部署权限
 permissions:
-  contents: read # 只需要读权限，不用写回仓库
-  pages: write # 允许部署到 Pages
-  id-token: write # 用于验证
+  contents: read
+  pages: write
+  id-token: write
 
-# 防止同时部署冲突
 concurrency:
   group: "pages"
   cancel-in-progress: false
@@ -47,45 +42,22 @@ jobs:
         with:
           version: 3.10
 
-      # 每个 posts/*.md 用 template.html 生成对应的 .html。
-      # 生成的页面里带 CONTAINER 标记（正文），下一步注入侧栏。
-      - name: Convert Markdown to HTML
-        run: |
-          for file in posts/*.md; do
-            [ -f "$file" ] || continue
-            filename=$(basename "$file" .md)
+      # 唯一的构建入口：pandoc + 组装页面 + sitemap/robots/post_list。
+      # --site-dir 产出一份「干净的站点目录」：只有站点文件，
+      # 不含 src/ scripts/ .git/，不会把源码一起发布出去。
+      # 本地预览（scripts/serve.py）调用的是同一份构建逻辑。
+      - name: Build site
+        run: python3 scripts/build.py --site-dir _site
 
-            # 日期（形如 2026-03-26）
-            date_part=$(echo "$filename" | grep -oP '^\d{4}-\d{2}-\d{2}' || true)
-            # 标题（去掉日期前缀）
-            title_part=$(echo "$filename" | sed 's/^[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}-//')
-
-            echo "Converting: $file  (date=$date_part title=$title_part)"
-
-            pandoc "$file" \
-              -f markdown+tex_math_dollars \
-              --template=template.html \
-              --metadata title="${title_part}" \
-              --mathjax \
-              -o "posts/${filename}.html"
-
-            # 供生成 post_list.json 使用
-            echo "${date_part}|${title_part}|${filename}.html" >> post_list.txt
-          done
-
-      # 注入侧栏/页脚：把 _partials/sidebar.html 注入每个页面，
-      # 同时生成 sitemap.xml 和 robots.txt。
-      # 本地预览（scripts/serve.py）调用的是同一个脚本，保证两边一致。
-      - name: Inject shared layout and generate sitemap
-        run: python scripts/inject_layout.py
-
-      - name: Generate post_list.json
-        run: python scripts/UpdateHomehtml.py
+      # 自检：结构完整 / 幂等 / 行尾统一。发现问题就让构建失败，
+      # 免得把坏页面部署上线。
+      - name: Verify build
+        run: python3 scripts/check_build.py
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "."
+          path: "_site"
 
   deploy:
     needs: build
