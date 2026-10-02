@@ -24,6 +24,10 @@ ROOT_FILES = [
     "sitemap.xml",
     "robots.txt",
     ".nojekyll",
+    # 网站的第一版手写初稿，永久保留的纪念物。
+    # 它自包含（内联样式、不依赖 style.css），所以直接原样发布即可。
+    # ⚠ 不要删（详见 README 和文件开头的注释）
+    "废稿.html",
 ]
 
 # 要一起搬的目录
