@@ -151,6 +151,12 @@ html[data-layout="sidebar"] body {
   background-color: #f7f7f7;
   flex-shrink: 0;
   overflow-y: auto;
+  /* logo 图是 width:250px + margin-left:-29px，右边缘落在 221px，
+     比侧栏内容区（203px）宽 18px。
+     而 CSS 规范里只要一个轴不是 visible，另一个轴的 visible 就会被算成 auto ——
+     于是 overflow-y:auto 把这 18px 变成了横向滚动条。
+     这里显式裁掉：左侧出血保留，右边不再出滚动条。 */
+  overflow-x: hidden;
 }
 
 /* 右侧主容器：占满剩余宽度，是页面上唯一的滚动区。
