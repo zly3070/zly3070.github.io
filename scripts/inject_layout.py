@@ -144,7 +144,7 @@ def inject(path: Path, sidebar: str, base: str, content: str, check: bool) -> bo
     if new_html == html:
         return False
     if not check:
-        path.write_text(new_html, encoding="utf-8")
+        path.write_text(new_html, encoding="utf-8", newline="")
     return True
 
 
@@ -276,7 +276,7 @@ def patch_head_meta(path: Path, desc: str, canonical: str, check: bool) -> int:
     if html == orig:
         return 0
     if not check:
-        path.write_text(html, encoding="utf-8")
+        path.write_text(html, encoding="utf-8", newline="")
     return n
 
 
@@ -385,8 +385,8 @@ def main():
     sm_path = ROOT / "sitemap.xml"
     rb_path = ROOT / "robots.txt"
     if not args.check:
-        sm_path.write_text(sitemap, encoding="utf-8")
-        rb_path.write_text(robots, encoding="utf-8")
+        sm_path.write_text(sitemap, encoding="utf-8", newline="")
+        rb_path.write_text(robots, encoding="utf-8", newline="")
     print(f"  ✓ sitemap.xml（{len(pages)} 个 URL）")
     print(f"  ✓ robots.txt")
 

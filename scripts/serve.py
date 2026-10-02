@@ -78,6 +78,12 @@ def convert_posts():
             f"--template={ROOT_DIR / 'template.html'}",
             "--metadata", f"title={title_part}",
             "--mathjax",
+            # 强制 LF 行尾。
+            # pandoc 在 Windows 上默认写 CRLF（实测 CRLF=77 LF=0），
+            # 而仓库里（以及 .gitattributes 要求的）是 LF，
+            # 于是每次本地生成都会让 git 报「CRLF 将被替换成 LF」的警告，
+            # 并且产生一整份纯行尾的假改动。
+            "--eol=lf",
             "-o", str(POSTS_DIR / f"{stem}.html"),
         ]
         result = subprocess.run(cmd, capture_output=True, text=True)
