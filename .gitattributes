@@ -1,0 +1,32 @@
+# 统一行尾：仓库里一律存 LF，检出到工作区也是 LF。
+#
+# 为什么需要这个文件：
+#   这台机器（以及 Windows 上的 Git 默认安装）在 D:/Git/etc/gitconfig 里设了
+#   core.autocrlf = true，规则是「提交时 CRLF→LF，检出时 LF→CRLF」。
+#   而仓库里存的一直是 LF，工作区却混着 LF 和 CRLF，于是每次 git add 都会刷：
+#     warning: LF will be replaced by CRLF the next time Git touches it
+#   更麻烦的是：下次 checkout / reset --hard 之后，这些文件在工作区变成 CRLF，
+#   git diff 会把「整个文件」都算成改动，把真正的改动淹没掉。
+#
+#   显式声明 eol=lf 之后，不管在哪个系统、谁克隆的，文本文件统一 LF，
+#   警告消失、diff 永远干净。
+#
+# 注意：.gitattributes 里的规则优先于 core.autocrlf。
+
+# 所有文本文件：自动识别，统一 LF
+* text=auto eol=lf
+
+# 这些是二进制，绝对不能让 Git 去做行尾转换（做了会损坏文件）
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.gif binary
+*.ico binary
+*.pdf binary
+
+# 字体与压缩包（若将来加了）
+*.woff binary
+*.woff2 binary
+*.zip binary
+*.gz binary
