@@ -13,7 +13,9 @@
 import shutil
 from pathlib import Path
 
-# 站点根目录下的普通文件
+# 站点根目录下的普通文件。
+# ⚠ style-*.css（页面专属样式）由 build.py 生成、数量可变，
+#   所以不在这里逐个列，而是在 copy_site() 里用通配收集。
 ROOT_FILES = [
     "index.html",
     "about.html",
@@ -29,6 +31,9 @@ ROOT_FILES = [
     # ⚠ 不要删（详见 README 和文件开头的注释）
     "废稿.html",
 ]
+
+# 用通配收集的文件（相对根目录）
+GLOB_FILES = ["style-*.css"]
 
 # 要一起搬的目录
 DIRS = ["posts", "images"]
@@ -49,6 +54,13 @@ def copy_site(root: Path, dest: Path) -> int:
         if src.exists():
             shutil.copy2(src, dest / name)
             count += 1
+
+    # 通配收集（页面专属样式 style-about.css 之类，数量可变）
+    for pattern in GLOB_FILES:
+        for src in sorted(root.glob(pattern)):
+            if src.is_file():
+                shutil.copy2(src, dest / src.name)
+                count += 1
 
     for d in DIRS:
         src_dir = root / d

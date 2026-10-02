@@ -20,6 +20,7 @@ src/                        ← 【只编辑这里】
   page-recent.html            最近页正文（文章列表）
   page-post.html              文章页正文片段模板（pandoc 用）
   style.css                   全站样式
+  page-about.css              关于页专属样式（照片墙 + 灯箱）
 
 posts/*.md                  ← 【只编辑这里】文章内容（markdown）
 
@@ -31,6 +32,7 @@ about.html
 Recent.html
 posts/*.html
 style.css                   （从 src/style.css 复制）
+style-about.css             （从 src/page-about.css 复制）
 post_list.json / sitemap.xml / robots.txt
 ```
 
@@ -72,7 +74,8 @@ python scripts/fetch_photos.py # 拉取 Unsplash 照片墙数据（消耗 API �
 | 侧栏（logo、简介、联系方式、友链） | `src/sidebar.html` |
 | 页脚 | `src/sidebar.html`（页脚在它里面） |
 | 首页的「最近」「项目」 | `src/page-index.html` |
-| 关于页 / 照片墙 / 灯箱 | `src/page-about.html` |
+| 关于页正文 / 照片墙 HTML + JS | `src/page-about.html` |
+| **照片墙 + 灯箱的样式** | **`src/page-about.css`** |
 | 最近页的文章列表 | `src/page-recent.html` |
 | 所有页面的 `<head>`（meta、字体、统计代码） | `src/head.html` |
 | 文章页顶部的 `~/` 返回链接 | `src/page-post.html` |
@@ -80,6 +83,16 @@ python scripts/fetch_photos.py # 拉取 Unsplash 照片墙数据（消耗 API �
 | 页面骨架 / body 结构 | `src/page-shell.html` |
 
 **title / description / canonical 不用手写** —— `build.py` 按页面自动填。
+
+### 给某页加专属样式
+
+在 `src/` 下建 `page-<名字>.css`，然后在 `build.py` 的 `ROOT_PAGES` 里
+给那一页的元组最后一项写上路径。构建会把它复制成 `style-<名字>.css`
+并自动在页面里插 `<link>`。
+
+> ⚠️ 照片墙是「绝对定位 + 填充最矮列」的真瀑布流：
+> `.wall-item` 必须 `position:absolute`、`#photo-wall` 必须 `position:relative`。
+> 删掉任何一条，照片会全部堆到左上角。别把这些样式当冗余清掉。
 
 ---
 

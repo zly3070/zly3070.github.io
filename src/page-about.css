@@ -1,0 +1,197 @@
+/* src/page-about.css —— 关于页专属样式（照片墙 + 灯箱）。
+
+   为什么不放进 style.css：
+     这两块只在这一页用，选择器又都带 #photo-wall / #lightbox 前缀，
+     独立成文件更容易维护。build.py 会把它链接进 about.html。
+
+   ⚠ 照片墙是「绝对定位 + 填充最矮列」的真瀑布流：
+     每张图的 left/top 由 JS 精确指定，所以 .wall-item 必须是 absolute，
+     #photo-wall 必须是 relative（作为定位参照物）。
+     删掉任何一条都会让照片全部堆到左上角。 */
+
+/* ===== 照片墙：正宗瀑布流（绝对定位 + 填充最矮列）=====
+   和 Unsplash 个人主页同一套原理：
+   每张图从文档流里拿出来，由 JS 指定精确的 left/top，
+   下一张放进当前最矮的那一列，列与列高度错开、不留洞。
+   列数和列宽都由容器宽度算出来，没有写死的图片宽度。 */
+#photo-wall {
+  position: relative; /* 绝对定位的参照物 */
+  margin-top: 20px;
+}
+
+#photo-wall .wall-item {
+  position: absolute; /* left / top 由 JS 给 */
+  margin: 0;
+  background-color: #efefef; /* 主色铺底，图没到时也不是刺眼的白 */
+  /* 模糊占位铺在 figure 上（由 JS 设 background-image），
+     这样它只盖住图片区域，不会溢到下面的署名文字上 */
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+#photo-wall img {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* 让浏览器在图片下载完成之前就知道该占多高，
+     否则加载时页面会不断往下跳 */
+  aspect-ratio: var(--ratio);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+#photo-wall img.is-loaded {
+  opacity: 1;
+}
+
+#photo-wall figcaption {
+  font-size: 12px;
+  color: #898e96;
+  margin-top: 5px;
+  line-height: 1.35;
+  /* 显式给背景色：否则 figure 上的模糊背景会透上来糊住文字 */
+  background-color: #fff;
+}
+
+#photo-wall figcaption a {
+  color: inherit;
+}
+
+#photo-wall figcaption a:hover {
+  color: #aa0707;
+}
+
+.wall-more {
+  margin-top: 14px;
+  font-style: italic;
+  text-align: right; /* 「在 Unsplash 查看我的全部作品」放右下角 */
+}
+
+/* ===== Lightbox：点图放大看细节 =====
+   用原生 <dialog>，不需要任何插件：
+   ESC 关闭、焦点锁定、::backdrop 遮罩全是浏览器原生能力。
+   大图来自 Unsplash 的 CDN（images.unsplash.com），
+   所以访客【不必翻墙、也不必跳去官网】就能看清细节。 */
+#lightbox {
+  border: none;
+  padding: 0;
+  background: transparent;
+  max-width: none;
+  max-height: none;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  color: #fff;
+}
+
+#lightbox::backdrop {
+  /* 完全遮住背后页面：留一点透明度的话，背后照片墙的文字会透上来，
+     和底部署名糊在一起，看着像重叠。看大图时背景本来就该消失。 */
+  background: #101216;
+}
+
+#lightbox figure {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* 不要用 justify-content:center —— 放不下的图片会从顶部溢出
+     （dialog 是 overflow:hidden），把署名压在照片上 */
+  justify-content: flex-start;
+  gap: 10px;
+  padding: 20px 20px 16px;
+  box-sizing: border-box;
+}
+
+#lightbox img {
+  /* 显式给署名留出高度，别依赖 max-height:100% ——
+     flex 下百分比高度对 img 这种可替换元素的解析不可靠 */
+  max-width: min(94vw, 1600px);
+  max-height: calc(100vh - 90px);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  background-color: transparent;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+#lightbox img.is-loaded {
+  opacity: 1;
+}
+
+#lightbox figcaption {
+  font-size: 13px;
+  color: #d6d9de;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+  /* 一条深色底衬，保证压在照片上时也看得清 */
+  background: rgba(20, 22, 26, 0.85);
+  padding: 6px 14px;
+  border-radius: 2px;
+}
+
+#lightbox figcaption a {
+  color: #d6d9de;
+}
+
+#lightbox figcaption a:hover {
+  color: #fff;
+}
+
+.lb-count {
+  font-family: Consolas, monospace;
+  color: #898e96;
+}
+
+.lb-btn {
+  font: inherit;
+  color: #d6d9de;
+  background: none;
+  border: 1px solid #4a4f57;
+  border-radius: 2px;
+  padding: 1px 8px;
+  cursor: pointer;
+}
+
+.lb-btn:hover {
+  color: #fff;
+  border-color: #8a9099;
+}
+
+/* 左右翻页按钮：贴在两侧垂直居中 */
+.lb-nav {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 22px;
+  line-height: 1;
+  padding: 14px 12px;
+  color: #d6d9de;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.lb-nav:hover {
+  color: #fff;
+}
+
+.lb-prev {
+  left: 8px;
+}
+
+.lb-next {
+  right: 8px;
+}
+
+/* 只有一张图时不显示翻页 */
+#lightbox.single .lb-nav {
+  display: none;
+}

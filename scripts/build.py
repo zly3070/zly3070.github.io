@@ -63,14 +63,15 @@ STYLE_OUT = ROOT / "style.css"
 
 SITE = "https://zly3070.github.io"
 
-# 根目录页面：产物名 -> 正文源文件
+# 根目录页面：产物名 -> 正文源文件、标题、描述、页面专属 CSS（可选）
 ROOT_PAGES = [
     ("index.html", SRC / "page-index.html", "Lyon Dev",
-     "波球存放思考和摄影的地方"),
+     "波球存放思考和摄影的地方", None),
     ("about.html", SRC / "page-about.html", "About - Lyon Dev",
-     "关于我：浙江工业大学计算机专业，正在学计算机图形学，喜欢摄影。"),
+     "关于我：浙江工业大学计算机专业，正在学计算机图形学，喜欢摄影。",
+     SRC / "page-about.css"),
     ("Recent.html", SRC / "page-recent.html", "最近 - Lyon Dev",
-     "所有文章列表：学习笔记、论文精读、技术思考。"),
+     "所有文章列表：学习笔记、论文精读、技术思考。", None),
 ]
 
 
@@ -179,11 +180,21 @@ def render_head(title: str, description: str, canonical: str, base: str,
 
 
 def render_page(title: str, description: str, out_rel: str, base: str,
-                content: str, head_extra: str = "") -> str:
+                content: str, head_extra: str = "", page_css: Path = None) -> str:
     head = render_head(title, description, url_for(out_rel), base, head_extra)
+
+    # 页面专属 CSS：源在 src/*.css，产物复制到 style-<名字>.css。
+    # 用 <link> 而不是内联 <style>，这样它和 style.css 一样能被浏览器缓存。
+    css_tag = ""
+    if page_css is not None:
+        css_out = "style-" + page_css.stem.replace("page-", "") + ".css"
+        write(ROOT / css_out, read(page_css))
+        css_tag = f'    <link rel="stylesheet" href="{base}{css_out}" />'
+
     content = fill(dedent(content).replace("{{BASE}}", base))
     sidebar = fill(read_fragment(SIDEBAR), BASE=base, CONTENT_SLOT=content).strip("\n")
-    return fill(read_fragment(SHELL), HEAD=head, SIDEBAR=sidebar, CONTENT=content)
+    return fill(read_fragment(SHELL), HEAD=head, SIDEBAR=sidebar,
+                CONTENT=content, PAGE_CSS=css_tag)
 
 def remove_comments(html: str) -> str:
     """
@@ -375,13 +386,15 @@ def main():
     posts = build_posts()
 
     print("\n[2/4] 生成页面")
-    for out_name, src_file, title, desc in ROOT_PAGES:
+    for out_name, src_file, title, desc, page_css in ROOT_PAGES:
         if not src_file.exists():
             print(f"    ⚠ 缺 {src_file.relative_to(ROOT)}，跳过 {out_name}")
             continue
         content = dedent(read_fragment(src_file))
-        write(ROOT / out_name, render_page(title, desc, out_name, "./", content))
-        print(f"    ✓ {out_name}")
+        write(ROOT / out_name,
+              render_page(title, desc, out_name, "./", content, page_css=page_css))
+        extra = f"（+{page_css.name}）" if page_css else ""
+        print(f"    ✓ {out_name}{extra}")
 
     print("\n[3/4] 生成 post_list / sitemap / robots / style.css")
     n = build_post_list(posts)

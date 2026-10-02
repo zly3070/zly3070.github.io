@@ -26,6 +26,7 @@ __pycache__/
 /about.html
 /Recent.html
 /style.css
+/style-*.css
 /sitemap.xml
 /robots.txt
 /post_list.json
