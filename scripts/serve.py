@@ -69,19 +69,47 @@ def check_photos_json():
 
 
 def start_server(port=8000):
-    class QuietHandler(http.server.SimpleHTTPRequestHandler):
+    class CleanUrlHandler(http.server.SimpleHTTPRequestHandler):
+        """
+        让本地预览的 URL 行为和 GitHub Pages 一致。
+
+        页面里的「~/」链接指向目录（根目录页面是 "./"，文章页是 "../"），
+        这样地址栏显示的是干净的 zly3070.github.io 而不是 .../index.html。
+
+        但 Python 自带的 SimpleHTTPRequestHandler 遇到目录会做两件坏事：
+          - 路径不带斜杠时，跳到一个带斜杠的 URL（/index.html -> /index.html/ 之类）
+          - 路径带斜杠时，直接列出目录内容，而不是送 index.html
+        GitHub Pages 的行为是「目录请求 -> 送该目录下的 index.html」，
+        这里照它实现，本地看到的就是线上看到的样子。
+        """
+
         def __init__(self, *args, **kwargs):
             super().__init__(*args, directory=str(PREVIEW), **kwargs)
 
         def log_message(self, fmt, *args):
             pass
 
+        def send_head(self):
+            path = self.translate_path(self.path)
+
+            # 目录 -> 直接送 index.html（不重定向、不列目录）
+            if os.path.isdir(path):
+                index = os.path.join(path, "index.html")
+                if os.path.isfile(index):
+                    orig, self.path = self.path, self.path.rstrip("/") + "/index.html"
+                    try:
+                        return super().send_head()
+                    finally:
+                        self.path = orig
+
+            return super().send_head()
+
     server = None
     for candidate in range(port, port + 10):
         try:
             # 多线程：一个页面会并发抓 html/css/js/图片，
             # 单线程服务器遇到慢连接会把整个服务卡住（踩过）。
-            server = http.server.ThreadingHTTPServer(("127.0.0.1", candidate), QuietHandler)
+            server = http.server.ThreadingHTTPServer(("127.0.0.1", candidate), CleanUrlHandler)
             server.allow_reuse_address = True
             port = candidate
             break
