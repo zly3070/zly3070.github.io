@@ -19,13 +19,13 @@
     <img src="{{BASE}}images/header_hello_cut.webp" alt="header-hello" />
   </div>
   <div class="site-tagline">
-    <h6>BUG! SQUASH!</h6>
+    <h6 style="margin: 0">BUG! SQUASH!</h6>
   </div>
 
   <div class="site-profile">
     <div class="site-profile-inner">
-      <h2 class="site-name">Linyao Zhou</h2>
-      <h3 class="site-username">zly3070</h3>
+      <span class="site-name">Linyao Zhou</span>
+      <span class="site-username">zly3070 · he/him</span>
 
       <p class="site-intro">
         Major in SE, worry about the future 很想很想拍好看照片 (>_<)ゞ
@@ -98,9 +98,9 @@
 <!-- 右侧主容器：这是页面上【唯一】会滚动的区域。
          文章过长时出现滚动条，滚动的也只是它；侧栏保持不动。 -->
 <div id="main_container">
-  <main id="content_container">
-{{CONTENT_SLOT}}
-  </main>
+  <main id="content_container">{{CONTENT_SLOT}}</main>
+
+  <hr style="width: calc(100% - 200px); margin: auto" />
 
   <footer id="site-footer">
     <div style="display: flex; flex-direction: column">
@@ -152,7 +152,7 @@
         </div>
       </div>
       <div style="display: flex; justify-content: center">
-        <p
+        <!-- <p
           style="
             color: #555555;
             margin-top: 14px;
@@ -160,7 +160,20 @@
             font-family: Source Sans Pro;
           "
         >
-          &copy; 2026 Lyon Chow. All rights reserved.
+          <a href="https://wtfpl2.com/">WTFPL</a>
+        </p> -->
+        <p style="color: #999; font-size: 13px; text-align: center">
+          &copy; 2026 Linyao Zhou ·
+          <a
+            href="https://wtfpl2.com/"
+            target="_blank"
+            style="
+              color: #888;
+              text-decoration: none;
+              border-bottom: 1px dashed #bbb;
+            "
+            >WTFPL</a
+          >
         </p>
       </div>
     </div>

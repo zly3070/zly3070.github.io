@@ -109,7 +109,7 @@ code {
 #main {
   display: flex;
   flex-direction: column;
-  padding: 50px 150px;
+  padding: 50px 100px;
   flex: 1;
 }
 
@@ -118,7 +118,7 @@ code {
 footer {
   display: flex;
   flex-direction: column;
-  padding: 23px 150px;
+  padding: 23px 100px;
   flex-shrink: 0;
 }
 
@@ -230,15 +230,18 @@ html[data-layout="sidebar"] body {
 }
 
 .site-name {
-  font-weight: bold;
+  font-weight: 600;
+  font-size: 24px;
+  display: block;
 }
 
 .site-username {
-  font-size: 1.2em;
+  font-size: 20px;
   font-style: normal;
   font-weight: 300;
   color: #656d76;
-  line-height: 24px;
+  display: block;
+
 }
 
 .site-intro {

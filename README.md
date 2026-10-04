@@ -68,19 +68,19 @@ python scripts/fetch_photos.py # 拉取 Unsplash 照片墙数据（消耗 API �
 
 ## 怎么改常见的几处
 
-| 想改什么 | 改哪个文件 |
-|---|---|
-| 全站正文的留白 | `src/style.css` 里的 `#main { padding: ... }` |
-| 侧栏（logo、简介、联系方式、友链） | `src/sidebar.html` |
-| 页脚 | `src/sidebar.html`（页脚在它里面） |
-| 首页的「最近」「项目」 | `src/page-index.html` |
-| 关于页正文 / 照片墙 HTML + JS | `src/page-about.html` |
-| **照片墙 + 灯箱的样式** | **`src/page-about.css`** |
-| 最近页的文章列表 | `src/page-recent.html` |
-| 所有页面的 `<head>`（meta、字体、统计代码） | `src/head.html` |
-| 文章页顶部的 `~/` 返回链接 | `src/page-post.html` |
-| 某篇文章的内容 | `posts/<日期>-<标题>.md` |
-| 页面骨架 / body 结构 | `src/page-shell.html` |
+| 想改什么                                    | 改哪个文件                                    |
+| ------------------------------------------- | --------------------------------------------- |
+| 全站正文的留白                              | `src/style.css` 里的 `#main { padding: ... }` |
+| 侧栏（logo、简介、联系方式、友链）          | `src/sidebar.html`                            |
+| 页脚                                        | `src/sidebar.html`（页脚在它里面）            |
+| 首页的「最近」「项目」                      | `src/page-index.html`                         |
+| 关于页正文 / 照片墙 HTML + JS               | `src/page-about.html`                         |
+| **照片墙 + 灯箱的样式**                     | **`src/page-about.css`**                      |
+| 最近页的文章列表                            | `src/page-recent.html`                        |
+| 所有页面的 `<head>`（meta、字体、统计代码） | `src/head.html`                               |
+| 文章页顶部的 `~/` 返回链接                  | `src/page-post.html`                          |
+| 某篇文章的内容                              | `posts/<日期>-<标题>.md`                      |
+| 页面骨架 / body 结构                        | `src/page-shell.html`                         |
 
 **title / description / canonical 不用手写** —— `build.py` 按页面自动填。
 
@@ -100,14 +100,14 @@ python scripts/fetch_photos.py # 拉取 Unsplash 照片墙数据（消耗 API �
 
 `build.py` 认这些标记：
 
-| 占位符 | 用在哪 | 含义 |
-|---|---|---|
-| `{{HEAD}}` `{{SIDEBAR}}` `{{CONTENT}}` | `page-shell.html` | 骨架的三个槽 |
-| `{{TITLE}}` `{{DESCRIPTION}}` `{{CANONICAL}}` | `head.html` | 按页面自动填 |
-| `{{BASE}}` | 任意源文件 | 到站点根的相对前缀（`./` 或 `../`） |
-| `{{HEAD_EXTRA}}` | `head.html` | 页面额外的 head 内容（文章页插 MathJax） |
-| `{{CONTENT_SLOT}}` | `sidebar.html` | 正文的落脚点 |
-| `$body$` | `page-post.html` | pandoc 填 markdown 正文 |
+| 占位符                                        | 用在哪            | 含义                                     |
+| --------------------------------------------- | ----------------- | ---------------------------------------- |
+| `{{HEAD}}` `{{SIDEBAR}}` `{{CONTENT}}`        | `page-shell.html` | 骨架的三个槽                             |
+| `{{TITLE}}` `{{DESCRIPTION}}` `{{CANONICAL}}` | `head.html`       | 按页面自动填                             |
+| `{{BASE}}`                                    | 任意源文件        | 到站点根的相对前缀（`./` 或 `../`）      |
+| `{{HEAD_EXTRA}}`                              | `head.html`       | 页面额外的 head 内容（文章页插 MathJax） |
+| `{{CONTENT_SLOT}}`                            | `sidebar.html`    | 正文的落脚点                             |
+| `$body$`                                      | `page-post.html`  | pandoc 填 markdown 正文                  |
 
 ---
 
