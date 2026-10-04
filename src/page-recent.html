@@ -26,8 +26,7 @@
     // 读取 post_list.json（python 生成的静态数据）
     fetch("post_list.json")
       .then(function (res) {
-        if (!res.ok)
-          throw new Error("post_list.json 加载失败: " + res.status);
+        if (!res.ok) throw new Error("post_list.json 加载失败: " + res.status);
         return res.json();
       })
       .then(function (posts) {
@@ -49,15 +48,15 @@
       var html = "";
 
       posts.forEach(function (post) {
-        var desc = post.description
-          ? '<p style="font-size:16px; margin:2px 0 0 0;">' +
-            escapeHtml(post.description) +
-            "</p>"
-          : "";
+        // var desc = post.description
+        //   ? '<p style="font-size:16px; margin:2px 0 0 0;">' +
+        //     escapeHtml(post.description) +
+        //     "</p>"
+        //   : "";
 
         html +=
           '<div style="display:flex;">' +
-          '<span style="font-family:Consolas; font-size:16px; color:#666666; white-space:nowrap;">' +
+          '<span style="font-family:Consolas; font-size:14px; color:#666666; white-space:nowrap;">' +
           formatDate(post.date) +
           "&nbsp" +
           "</span>" +
@@ -67,7 +66,7 @@
           '" style="font-size:18px; width:fit-content;" class="post-title">' +
           escapeHtml(post.title) +
           "</a>" +
-          desc +
+          // desc +
           "</div>" +
           "</div>";
       });
@@ -107,12 +106,3 @@
     }
   })();
 </script>
-
-
-
-
-
-
-
-
-

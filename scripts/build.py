@@ -65,12 +65,12 @@ SITE = "https://zly3070.github.io"
 
 # 根目录页面：产物名 -> 正文源文件、标题、描述、页面专属 CSS（可选）
 ROOT_PAGES = [
-    ("index.html", SRC / "page-index.html", "Lyon Dev",
-     "波球存放思考和摄影的地方", None),
-    ("about.html", SRC / "page-about.html", "About - Lyon Dev",
-     "关于我：浙江工业大学计算机专业，正在学计算机图形学，喜欢摄影。",
+    ("index.html", SRC / "page-index.html",
+     "小波球de人间见行", "*啵…啵啾…*", None),
+    ("about.html", SRC / "page-about.html", "About",
+     "关于我：zjut软工专生，正在学AI，喜欢摄影。",
      SRC / "page-about.css"),
-    ("Recent.html", SRC / "page-recent.html", "最近 - Lyon Dev",
+    ("Recent.html", SRC / "page-recent.html", "最近",
      "所有文章列表：学习笔记、论文精读、技术思考。", None),
 ]
 
@@ -292,7 +292,7 @@ def build_posts():
 
         # 2) 套上骨架 + 侧栏 + 页脚
         html = render_page(
-            title=f"{title} - Lyon Dev",
+            title=f"{title} - 波球在这里思考过",
             description=md_description(md),
             out_rel=f"posts/{out_name}",
             base="../",

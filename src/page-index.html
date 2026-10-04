@@ -3,187 +3,183 @@
      {{BASE}} 是到站点根目录的相对前缀。 -->
 
 <main id="main">
+  <div style="display: flex; align-items: center; gap: 8px; margin-top: -25px">
+    <span style="color: #898e96">
+      嗨你好，欢迎光临小波球的人间见行记！ *啵…啵啾…*
+      <br />我使用了纯html和css搭建了这个网页，目前仅保证Win端访问体验，Linux和Android端适配将不日上线。<br />
+      您可以在浏览器里按F12打开开发者工具，查看网页的源代码，或者在github上查看我的代码仓库，欢迎交流和指正。
+      <br />
+      <br />
+      <span style="font-weight: 600">关于友链：</span
+      >建站伊始，评论功能尚未完善，您可以通过Issues给我发送您的个人网站网址和希望呈现的名字。<br />
+      格式参照 &lt;a href="WEBURL"&gt;WEBNAME&lt;/a&gt;
+    </span>
+  </div>
+
+  <hr style="margin-top: 20px" />
+  <div>
+    <div style="margin-top: 35px">
+      <h1 style="font-weight: 800">
+        <a href="{{BASE}}Recent.html" id="" class="post-link">./ </a>
+        最近写了什么？
+      </h1>
+
       <div
-        style="display: flex; align-items: center; gap: 8px; margin-top: -25px"
+        id="recent-grid"
+        style="
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 30px;
+          margin-top: 20px;
+        "
+      ></div>
+      <!-- JS填充内容 -->
+    </div>
+
+    <div style="margin-top: 80px">
+      <h1 style="font-weight: 800">
+        <a href="" class="post-link">./</a> 哦不我的小垃圾
+      </h1>
+      <div
+        style="
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 30px;
+          margin-top: 20px;
+        "
       >
-        <span style="color: #898e96">
-          我使用了纯html和css搭建了这个网页，目前仅保证Win端访问体验，Linux和Android端适配将不日上线。<br />
-          您可以在浏览器里按F12打开开发者工具，查看网页的源代码，或者在github上查看我的代码仓库，欢迎交流和指正。
-          <br />
-          <br />
-          <span style="font-weight: 600">关于友链：</span
-          >建站伊始，评论功能尚未完善，您可以通过Issues给我发送您的个人网站网址和希望呈现的名字。<br />
-          格式参照 &lt;a href="WEBURL"&gt;WEBNAME&lt;/a&gt;
-        </span>
-      </div>
-
-      <hr style="margin-top: 20px" />
-      <div>
-        <div style="margin-top: 35px">
-          <h1 style="font-weight: 800">
-            最近
-            <a href="{{BASE}}Recent.html" id="" class="post-link">
-              ./</a
-            >
-          </h1>
-
-          <div
-            id="recent-grid"
+        <!-- 手动添加的项目，每个都是一个 cell，复制这个块即可 -->
+        <div style="display: flex; flex-direction: column">
+          <span
             style="
-              display: grid;
-              grid-template-columns: 1fr 1fr;
-              gap: 30px;
-              margin-top: 20px;
+              font-family: Consolas;
+              font-size: 14px;
+              color: #666666;
+              white-space: nowrap;
             "
-          ></div>
-          <!-- JS填充内容 -->
-        </div>
-
-        <div style="margin-top: 80px">
-          <h1 style="font-weight: 800">
-            项目 <a href="" class="post-link">./</a>
-          </h1>
-          <div
+            >02 Jul 2026&nbsp;</span
+          >
+          <a
+            href="https://github.com/zly3070/cpp_homeworks/tree/main/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E8%AF%BE%E5%A4%A7%E4%BD%9C%E4%B8%9A/AlumniSystem"
+            style="font-size: 20px; width: fit-content"
+            class="post-title"
+            target="_blank"
+          >
+            校友录系统
+          </a>
+          <p
             style="
-              display: grid;
-              grid-template-columns: 1fr 1fr;
-              gap: 30px;
-              margin-top: 20px;
+              font-size: 16px;
+              margin: 20px 0 0 0;
+              display: -webkit-box;
+              -webkit-line-clamp: 3;
+              -webkit-box-orient: vertical;
+              overflow: hidden;
             "
           >
-            <!-- 手动添加的项目，每个都是一个 cell，复制这个块即可 -->
-            <div style="display: flex; flex-direction: column">
-              <span
-                style="
-                  font-family: Consolas;
-                  font-size: 14px;
-                  color: #666666;
-                  white-space: nowrap;
-                "
-                >02 Jul 2026&nbsp;</span
-              >
-              <a
-                href="https://github.com/zly3070/cpp_homeworks/tree/main/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E8%AF%BE%E5%A4%A7%E4%BD%9C%E4%B8%9A/AlumniSystem"
-                style="font-size: 20px; width: fit-content"
-                class="post-title"
-                target="_blank"
-              >
-                校友录系统
-              </a>
-              <p
-                style="
-                  font-size: 16px;
-                  margin: 20px 0 0 0;
-                  display: -webkit-box;
-                  -webkit-line-clamp: 3;
-                  -webkit-box-orient: vertical;
-                  overflow: hidden;
-                "
-              >
-                基于 C++ 和 FTXUI
-                库开发的校友录管理系统，提供图形化终端界面（TUI），支持校友信息的增删改查和持久化存储。
-              </p>
-            </div>
-            <!-- 在这行下面复制上面的 cell 继续添加新项目 -->
-          </div>
+            基于 C++ 和 FTXUI
+            库开发的校友录管理系统，提供图形化终端界面（TUI），支持校友信息的增删改查和持久化存储。
+          </p>
         </div>
+        <!-- 在这行下面复制上面的 cell 继续添加新项目 -->
       </div>
-    </main>
+    </div>
+  </div>
+</main>
 
 <script>
-(function () {
-        // 读取 post_list.json（python 生成的静态数据）
-        fetch("post_list.json")
-          .then(function (res) {
-            if (!res.ok)
-              throw new Error("post_list.json 加载失败: " + res.status);
-            return res.json();
-          })
-          .then(function (posts) {
-            renderRecentGrid(posts);
-          })
-          .catch(function (err) {
-            console.error(err);
-          });
+  (function () {
+    // 读取 post_list.json（python 生成的静态数据）
+    fetch("post_list.json")
+      .then(function (res) {
+        if (!res.ok) throw new Error("post_list.json 加载失败: " + res.status);
+        return res.json();
+      })
+      .then(function (posts) {
+        renderRecentGrid(posts);
+      })
+      .catch(function (err) {
+        console.error(err);
+      });
 
-        function renderRecentGrid(posts) {
-          var grid = document.getElementById("recent-grid");
-          if (!grid) return;
+    function renderRecentGrid(posts) {
+      var grid = document.getElementById("recent-grid");
+      if (!grid) return;
 
-          // 展示最多 5 篇；若文章总数 > 5，则在第 6 格（第 3 行第 2 个）显示 "..." 省略号
-          var maxItems = 5;
-          var shown = posts.slice(0, maxItems);
-          var hasMore = posts.length > maxItems;
+      // 展示最多 5 篇；若文章总数 > 5，则在第 6 格（第 3 行第 2 个）显示 "..." 省略号
+      var maxItems = 5;
+      var shown = posts.slice(0, maxItems);
+      var hasMore = posts.length > maxItems;
 
-          var html = "";
+      var html = "";
 
-          shown.forEach(function (post) {
-            // 点击跳转的只有标题（用 post-title，hover 变红）
-            var titleLink =
-              '<a href="{{BASE}}posts/' +
-              encodeURI(post.filename) +
-              '" style="font-size:20px;" class="post-title">' +
-              escapeHtml(post.title) +
-              "</a>";
+      shown.forEach(function (post) {
+        // 点击跳转的只有标题（用 post-title，hover 变红）
+        var titleLink =
+          '<a href="{{BASE}}posts/' +
+          encodeURI(post.filename) +
+          '" style="font-size:20px;" class="post-title">' +
+          escapeHtml(post.title) +
+          "</a>";
 
-            var desc = post.description
-              ? '<p style="font-size:16px; margin:20px 0 0 0; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">' +
-                escapeHtml(post.description) +
-                "</p>"
-              : "";
+        var desc = post.description
+          ? '<p style="font-size:16px; margin:20px 0 0 0; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">' +
+            escapeHtml(post.description) +
+            "</p>"
+          : "";
 
-            html +=
-              '<div style="display:flex; flex-direction:column;">' +
-              '<span style="font-family:Consolas; font-size:14px; color:#666666; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' +
-              formatDate(post.date) +
-              "&nbsp" +
-              "</span>" +
-              '<span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' +
-              titleLink +
-              "</span>" +
-              desc +
-              "</div>";
-          });
+        html +=
+          '<div style="display:flex; flex-direction:column;">' +
+          '<span style="font-family:Consolas; font-size:14px; color:#666666; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' +
+          formatDate(post.date) +
+          "&nbsp" +
+          "</span>" +
+          '<span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' +
+          titleLink +
+          "</span>" +
+          desc +
+          "</div>";
+      });
 
-          if (hasMore) {
-            html +=
-              '<p style="display:flex; align-items:center; font-size:22px; color:#333333;" >' +
-              "..." +
-              "</p>";
-          }
+      if (hasMore) {
+        html +=
+          '<p style="display:flex; align-items:center; font-size:22px; color:#333333;" >' +
+          "..." +
+          "</p>";
+      }
 
-          grid.innerHTML = html;
-        }
+      grid.innerHTML = html;
+    }
 
-        // 网络防御：转义 HTML
-        function escapeHtml(str) {
-          var div = document.createElement("div");
-          div.textContent = String(str == null ? "" : str);
-          return div.innerHTML;
-        }
+    // 网络防御：转义 HTML
+    function escapeHtml(str) {
+      var div = document.createElement("div");
+      div.textContent = String(str == null ? "" : str);
+      return div.innerHTML;
+    }
 
-        // 将 "2026-03-26" 格式化为 "26 Mar 2026"
-        function formatDate(dateStr) {
-          if (!dateStr) return "";
-          var parts = dateStr.split("-");
-          if (parts.length !== 3) return dateStr;
-          var months = [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Oct",
-            "Nov",
-            "Dec",
-          ];
-          var m = parseInt(parts[1], 10) - 1;
-          var monthName = months[m] || parts[1];
-          return parseInt(parts[2], 10) + " " + monthName + " " + parts[0];
-        }
-      })();
+    // 将 "2026-03-26" 格式化为 "26 Mar 2026"
+    function formatDate(dateStr) {
+      if (!dateStr) return "";
+      var parts = dateStr.split("-");
+      if (parts.length !== 3) return dateStr;
+      var months = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+      var m = parseInt(parts[1], 10) - 1;
+      var monthName = months[m] || parts[1];
+      return parseInt(parts[2], 10) + " " + monthName + " " + parts[0];
+    }
+  })();
 </script>
