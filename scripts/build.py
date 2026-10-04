@@ -66,7 +66,7 @@ SITE = "https://zly3070.github.io"
 # 根目录页面：产物名 -> 正文源文件、标题、描述、页面专属 CSS（可选）
 ROOT_PAGES = [
     ("index.html", SRC / "page-index.html",
-     "小波球de人间见行", "*啵…啵啾…*", None),
+     "小波球de博物馆", "*啵…啵啾…*", None),
     ("about.html", SRC / "page-about.html", "About",
      "关于我：zjut软工专生，正在学AI，喜欢摄影。",
      SRC / "page-about.css"),
