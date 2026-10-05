@@ -36,7 +36,9 @@ ROOT_FILES = [
 GLOB_FILES = ["style-*.css"]
 
 # 要一起搬的目录
-DIRS = ["posts", "images"]
+# ⚠ fonts/ 是自托管的字体（src/style.css 里的 @font-face 引用了它）。
+#   漏了它线上字体会 404 —— 和当初漏掉 废稿.html 是同一类错误。
+DIRS = ["posts", "images", "fonts"]
 
 
 def copy_site(root: Path, dest: Path) -> int:

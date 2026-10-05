@@ -91,12 +91,17 @@ def check_structure(path: Path):
         problems.append("残留 $body$（pandoc 没填）")
 
     # 4) 三大块在位
+    #
+    # ⚠ 这里只查「结构」（元素和 class 在不在），不查具体文案。
+    #   以前是靠 "© 2026" / "All rights reserved" 判断页脚在不在 ——
+    #   结果页脚文案一改成 "Linyao Zhou · WTFPL"，全部页面就被误报「缺页脚」。
+    #   文案会变，结构相对稳定，所以判据要选结构。
     if 'class="site-profile"' not in body:
         problems.append("缺侧栏")
-    if "© 2026" not in body and "All rights reserved" not in body:
-        problems.append("缺页脚")
-    if 'id="main"' not in body and path.name not in ("index.html",):
-        problems.append("缺正文 <main id=\"main\">")
+    if "友链" not in body and "Friends" not in body:
+        problems.append("缺页脚内容（友链区块）")
+    if 'id="main"' not in body:
+        problems.append('缺正文 <main id="main">')
 
     # 5) 页脚必须在 main_container 里面
     i_mc = body.find('id="main_container"')
