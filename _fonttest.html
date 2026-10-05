@@ -1,0 +1,111 @@
+<!doctype html>
+<!-- 字体自检页。不属于站点，只是用来确认字体能不能加载。
+     build.py 不会管这个文件（它不在 src/ 里），serve.py 也不复制它。
+     把它放在根目录，用 http://localhost:8000/_fonttest.html 直接打开。 -->
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>字体自检</title>
+    <style>
+      /* 故意不走 style.css —— 完全独立的 @font-face，排除缓存和优先级干扰 */
+      @font-face {
+        font-family: "RC-Test-400";
+        src: url("./fonts/RobotoCondensed-Regular.woff2") format("woff2");
+        font-weight: 400;
+      }
+      @font-face {
+        font-family: "RC-Test-700";
+        src: url("./fonts/RobotoCondensed-Bold.woff2") format("woff2");
+        font-weight: 700;
+      }
+      body {
+        font-family: "Microsoft YaHei", sans-serif;
+        padding: 30px;
+        line-height: 1.8;
+      }
+      .row {
+        margin-bottom: 14px;
+        font-size: 22px;
+      }
+      .cjk {
+        font-family: "RC-Test-400", "Microsoft YaHei", sans-serif;
+      }
+      .lat {
+        font-family: "RC-Test-400", "Microsoft YaHei", sans-serif;
+        color: #aa0707;
+      }
+      .bold {
+        font-family: "RC-Test-700", "Microsoft YaHei", sans-serif;
+        font-weight: 700;
+      }
+      .fallback {
+        color: #898e96;
+      }
+      #log {
+        font-family: Consolas, monospace;
+        font-size: 14px;
+        white-space: pre-wrap;
+        background: #f3f3f3;
+        padding: 14px;
+        border-radius: 2px;
+        margin-top: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>字体自检</h1>
+    <p class="fallback">
+      下面每一行都标了「应该长什么样」。如果一行看起来和微软雅黑没区别，说明那个字重没加载成功。
+    </p>
+
+    <div class="row">
+      <span class="fallback">[对照 · 微软雅黑]</span> Linyao Zhou 12345
+    </div>
+
+    <div class="row lat">
+      <span class="fallback">[RC 400 · 应为窄体]</span> Linyao Zhou 12345
+    </div>
+
+    <div class="row bold">
+      <span class="fallback">[RC 700 · 应为窄粗体]</span> Linyao Zhou 12345
+    </div>
+
+    <div class="row cjk">
+      <span class="fallback">[RC 不存在中文 · 中文应回退雅黑]</span>
+      很想很想拍好看照片
+    </div>
+
+    <div id="log">正在检测…</div>
+
+    <script>
+      (async function () {
+        var out = [];
+        var tests = [
+          ['RC-Test-400', './fonts/RobotoCondensed-Regular.woff2'],
+          ['RC-Test-700', './fonts/RobotoCondensed-Bold.woff2'],
+        ];
+        for (var i = 0; i < tests.length; i++) {
+          var name = tests[i][0];
+          var url = tests[i][1];
+          try {
+            var ff = new FontFace(name, 'url(' + url + ')');
+            await ff.load();
+            document.fonts.add(ff);
+            out.push('✅ ' + name + ' 加载成功  (' + url + ')');
+          } catch (e) {
+            out.push('❌ ' + name + ' 加载失败  (' + url + ')\n     ' + e);
+          }
+        }
+        out.push('');
+        out.push('document.fonts.check("22px RC-Test-400") = ' +
+                 document.fonts.check('22px "RC-Test-400"'));
+        out.push('document.fonts.size = ' + document.fonts.size);
+        out.push('');
+        out.push('结论：上面那几行文字如果【变窄了】，字体就是好的；');
+        out.push('      如果全和第一行微软雅黑一样宽，就是字体没加载。');
+        document.getElementById('log').textContent = out.join('\n');
+        document.title = '字体自检 — ' + (out[0].indexOf('✅') === 0 ? '成功' : '失败');
+      })();
+    </script>
+  </body>
+</html>

@@ -163,6 +163,7 @@ def url_for(rel_path: str) -> str:
 
 def render_head(title: str, description: str, canonical: str, base: str,
                 head_extra: str = "") -> str:
+    """为构建head的必要元素进行去空格等工作"""
     raw = read_fragment(HEAD)
     # {{HEAD_EXTRA}} 单独占一行：有内容就留，没内容整行删掉（避免留空行）
     raw = re.sub(
@@ -181,6 +182,7 @@ def render_head(title: str, description: str, canonical: str, base: str,
 
 def render_page(title: str, description: str, out_rel: str, base: str,
                 content: str, head_extra: str = "", page_css: Path = None) -> str:
+    """传入构建一个html的必要元素，并格式化，去空格等基础工作"""
     head = render_head(title, description, url_for(out_rel), base, head_extra)
 
     # 页面专属 CSS：源在 src/*.css，产物复制到 style-<名字>.css。
@@ -238,10 +240,13 @@ def parse_post_name(stem: str):
     """'2026-08-09-数据结构' -> ('2026-08-09', '数据结构')"""
     m = re.match(r"^(\d{4}-\d{2}-\d{2})-(.*)$", stem)
     return (m.group(1), m.group(2)) if m else ("", stem)
+    
+    
 
+"""从 markdown 抽第一段 _斜体_ 作为简介"""
 
 def md_description(md: Path) -> str:
-    """从 markdown 抽第一段 _斜体_ 作为简介"""
+
     if not md.exists():
         return ""
     text = read(md)
@@ -261,8 +266,11 @@ def md_description(md: Path) -> str:
     return t[:147] + "..." if len(t) > 150 else t
 
 
+
+"""pandoc 渲染正文片段 -> 组成完整文章页。返回 [(日期, 标题, 文件名)]"""
+"""为每个.md文件用于posts文件夹内的单个html文件"""
+
 def build_posts():
-    """pandoc 渲染正文片段 -> 组成完整文章页。返回 [(日期, 标题, 文件名)]"""
     md_files = sorted(POSTS.glob("*.md"))
     if not md_files:
         print("  ⚠ posts/ 下没有 .md 文件")
@@ -350,6 +358,7 @@ def build_robots() -> str:
 
 
 def build_post_list(posts):
+    """生成post_list.json，包含date,title,description和filename"""
     data = []
     for date, title, name in posts:
         data.append({
@@ -377,15 +386,16 @@ def main():
     print("=" * 62)
     print("  构建整站：源在 src/ 和 posts/*.md，产物在根目录")
     print("=" * 62)
-
+    
+    # 这里检查src中是否有源文件，没有的话，提出SystemExit.
     for required in (SHELL, HEAD, SIDEBAR, POST_FRAGMENT, STYLE_SRC):
         if not required.exists():
             raise SystemExit(f"✗ 缺源文件: {required.relative_to(ROOT)}")
 
     print("\n[1/4] 渲染文章")
-    posts = build_posts()
+    posts = build_posts() #正式生成html文件
 
-    print("\n[2/4] 生成页面")
+    print("\n[2/4] 生成页面") #展示生成了src下的index.html/about.html/Recent.html
     for out_name, src_file, title, desc, page_css in ROOT_PAGES:
         if not src_file.exists():
             print(f"    ⚠ 缺 {src_file.relative_to(ROOT)}，跳过 {out_name}")
