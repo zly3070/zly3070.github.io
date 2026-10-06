@@ -169,7 +169,7 @@ code {
 #main {
   display: flex;
   flex-direction: column;
-  padding: 18px 100px 15px 80px;
+  padding: 18px 150px 15px 130px;
   flex: 1;
 }
 
