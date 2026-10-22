@@ -65,8 +65,8 @@
     system-ui;
   /* line-height: 1.5; */
   /* color: #333; */
-  background:#FFFDFA;
-  text-autospace: normal;
+  /* background:#FFFDFA;
+  text-autospace: normal; */
 }
 
 html {
@@ -80,6 +80,8 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  color: #333;
+  background: #FFFDFA;
 }
 
 /* ---------- 2. 链接（id数 > class数 >）---------- */ 
